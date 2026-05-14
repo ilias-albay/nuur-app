@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nuur – نور</title>
+<style>
+:root {
+  --green: #1e6b45;
+  --green2: #2d8a5e;
+  --green3: #52b788;
+  --green-bg: #e8f5ee;
+  --gold: #f4a228;
+  --gold2: #c97d00;
+  --bg: #f6faf7;
+  --text: #1a1a2e;
+  --muted: #6b7280;
+  --shadow: 0 4px 24px rgba(0,0,0,0.09);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  max-width: 430px;
+  margin: 0 auto;
+  height: 100vh;
+  overflow: hidden;
+}
+.screen { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ══ SPLASH ══ */
+#splash {
+  background: linear-gradient(170deg, #0d3b26 0%, #1e6b45 55%, #3da06b 100%);
+  align-items: center; justify-content: center; gap: 14px;
+  text-align: center; padding: 40px 30px; overflow-y: auto;
+}
+.splash-moon { font-size: 88px; animation: floatMoon 3s ease-in-out infinite; filter: drop-shadow(0 6px 20px rgba(0,0,0,0.3)); }
+@keyframes floatMoon { 0%,100%{transform:translateY(0) rotate(-8deg);} 50%{transform:translateY(-14px) rotate(8deg);} }
+.splash-bubble { background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); border-radius: 20px; padding: 9px 18px; color: rgba(255,255,255,0.9); font-size: 14px; font-weight: 600; }
+.splash-name { font-size: 54px; font-weight: 900; color: white; letter-spacing: 3px; }
+.splash-ar { font-size: 30px; color: var(--gold); font-weight: 700; }
+.splash-tag { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; max-width: 270px; }
+.splash-btn { background: var(--gold); color: white; border: none; padding: 17px 52px; border-radius: 50px; font-size: 18px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 28px rgba(244,162,40,0.45); margin-top: 12px; transition: transform .15s; }
+.splash-btn:active { transform: scale(0.96); }
+
+/* ══ HEADER ══ */
+.app-header { background: white; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.06); flex-shrink: 0; z-index: 10; }
+.hbrand { display: flex; align-items: center; gap: 8px; }
+.hbrand .hm { font-size: 24px; }
+.hbrand .hn { font-size: 20px; font-weight: 900; color: var(--green); letter-spacing: 1px; }
+.hbrand .hn span { color: var(--gold); }
+.hpills { display: flex; gap: 8px; }
+.pill { display: flex; align-items: center; gap: 4px; padding: 6px 11px; border-radius: 20px; font-size: 14px; font-weight: 700; }
+.pill.g { background: var(--green-bg); color: var(--green); }
+.pill.a { background: #fff4d6; color: var(--gold2); }
+
+/* ══ BOTTOM NAV ══ */
+.bnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: white; display: flex; border-top: 1px solid #e5e7eb; z-index: 20; }
+.bnav-btn { flex: 1; border: none; background: none; padding: 10px 0 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; font-weight: 700; color: #9ca3af; transition: color .2s; }
+.bnav-btn.on { color: var(--green); }
+.bnav-btn .ni { font-size: 22px; }
+
+/* ══ HOME SCROLL ══ */
+#home .scroll { flex: 1; overflow-y: auto; padding: 18px 18px 100px; }
+
+.nuur-card { background: linear-gradient(135deg, var(--green) 0%, var(--green3) 100%); border-radius: 22px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 22px; box-shadow: 0 6px 24px rgba(30,107,69,0.28); }
+.nuur-card .nm { font-size: 50px; flex-shrink: 0; animation: floatMoon 3s ease-in-out infinite; }
+.nuur-card .nt h3 { font-size: 16px; font-weight: 800; color: white; }
+.nuur-card .nt p { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 3px; line-height: 1.4; }
+
+/* ══ DUOLINGO PATH ══ */
+.path-section-banner {
+  background: linear-gradient(135deg, var(--green), var(--green2));
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  margin: 24px 0 16px;
+  box-shadow: 0 4px 16px rgba(30,107,69,0.25);
+}
+.psb-icon { font-size: 28px; }
+.psb-text h4 { font-size: 14px; font-weight: 800; color: white; }
+.psb-text p { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+
+.duo-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0 10px;
+}
+
+.duo-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+/* Connector between nodes */
+.duo-connector {
+  width: 4px;
+  height: 32px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #b7e4c7, #d8f3dc);
+  margin: 2px 0;
+}
+.duo-connector.done-line {
+  background: linear-gradient(to bottom, var(--green3), var(--green));
+}
+
+/* The actual node row – positioned left/center/right */
+.duo-node-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.duo-node-row.pos-left  { justify-content: flex-start; padding-left: 28px; }
+.duo-node-row.pos-right { justify-content: flex-end;   padding-right: 28px; }
+.duo-node-row.pos-center{ justify-content: center; }
+
+/* Node bubble */
+.duo-node {
+  width: 78px; height: 78px;
+  border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  border: 5px solid transparent;
+  transition: transform .18s;
+  position: relative;
+  user-select: none;
+}
+.duo-node.done {
+  background: var(--green);
+  border-color: var(--green3);
+  box-shadow: 0 6px 20px rgba(30,107,69,0.38), inset 0 -4px 0 rgba(0,0,0,0.15);
+}
+.duo-node.active {
+  background: var(--gold);
+  border-color: #f9cc6a;
+  box-shadow: 0 6px 22px rgba(244,162,40,0.5), inset 0 -4px 0 rgba(0,0,0,0.15);
+  animation: nodeBounce 1.8s ease-in-out infinite;
+}
+.duo-node.locked {
+  background: #dde0e4;
+  border-color: #c8cbd0;
+  cursor: not-allowed;
+  box-shadow: 0 4px 0 #b0b3b8;
+  opacity: 0.7;
+}
+@keyframes nodeBounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
+.duo-node:active:not(.locked) { transform: scale(0.91); }
+
+.duo-node .chapter-badge {
+  position: absolute;
+  top: -8px; right: -6px;
+  background: white;
+  border-radius: 10px;
+  font-size: 10px; font-weight: 800;
+  padding: 1px 5px;
+  color: var(--green);
+  border: 2px solid var(--green-bg);
+  line-height: 1.4;
+}
+.duo-node.active .chapter-badge { background: var(--gold); color: white; border-color: white; }
+.duo-node.done .chapter-badge { background: rgba(255,255,255,0.22); color: white; border-color: rgba(255,255,255,0.5); }
+.duo-node.locked .chapter-badge { background: #aaa; color: white; border-color: #ccc; }
+
+.duo-node-label {
+  font-size: 11px; font-weight: 700;
+  color: var(--muted); margin-top: 6px;
+  text-align: center; max-width: 90px;
+  line-height: 1.25;
+}
+
+/* Active node has a "Start" button below */
+.duo-start-pill {
+  background: var(--gold);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 22px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(244,162,40,0.4), 0 4px 0 rgba(0,0,0,0.15);
+  margin-top: 8px;
+  letter-spacing: .4px;
+  transition: transform .15s;
+}
+.duo-start-pill:active { transform: scale(0.95); }
+
+/* ══ LESSON OVERLAY ══ */
+.ov-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.52); z-index: 50; display: none; align-items: flex-end; justify-content: center; }
+.ov-bg.open { display: flex; }
+.ov-card { background: white; border-radius: 26px 26px 0 0; padding: 28px 22px 44px; width: 100%; max-width: 430px; animation: slideUp .28s ease; position: relative; }
+@keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
+.ov-close { position: absolute; top: 14px; right: 18px; background: #f0f0f0; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; }
+.ov-moon { font-size: 52px; text-align: center; margin-bottom: 8px; animation: floatMoon 3s ease-in-out infinite; }
+.ov-title { font-size: 22px; font-weight: 900; margin-bottom: 5px; }
+.ov-desc { font-size: 14px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+.ov-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px; }
+.ov-chip { background: var(--green-bg); color: var(--green); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.ov-xp { background: #fff4d6; color: var(--gold2); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.start-btn { width: 100%; background: linear-gradient(135deg, var(--green), var(--green3)); color: white; border: none; padding: 18px; border-radius: 16px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(30,107,69,0.35); transition: transform .15s; }
+.start-btn:active { transform: scale(0.97); }
+
+/* ══ QUIZ ══ */
+#quiz { background: white; }
+.quiz-top { padding: 14px 18px 0; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.quit-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #bbb; padding: 4px; }
+.pbar-wrap { flex: 1; height: 10px; background: #eee; border-radius: 8px; overflow: hidden; }
+.pbar-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green3)); border-radius: 8px; transition: width .4s ease; }
+.hearts-row { display: flex; gap: 3px; }
+.hrt { font-size: 18px; transition: all .3s; }
+.hrt.gone { filter: grayscale(1) opacity(.3); }
+
+.quiz-body { flex: 1; overflow-y: auto; padding: 18px 18px 24px; }
+
+.char-tutor { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+.char-tutor .tc { font-size: 38px; flex-shrink: 0; }
+.tutor-bubble { background: var(--green-bg); border-radius: 16px 16px 16px 4px; padding: 10px 13px; font-size: 13px; font-weight: 600; color: var(--green); line-height: 1.4; }
+
+.q-type-lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+.q-text { font-size: 21px; font-weight: 800; line-height: 1.35; margin-bottom: 14px; }
+
+.arabic-box { background: #f0fdf4; border: 2px solid var(--green-bg); border-radius: 16px; padding: 16px 16px 14px; margin-bottom: 14px; text-align: center; position: relative; }
+.arabic-big { font-size: 30px; color: var(--green); direction: rtl; font-weight: 700; line-height: 1.7; }
+.translit { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-top: 10px; }
+.tr-chip { background: white; border: 2px solid var(--green-bg); color: var(--green2); font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px; }
+.translit-hidden { opacity: 0; pointer-events: none; transform: translateY(4px); transition: none; }
+.translit-visible { opacity: 1; pointer-events: auto; transform: translateY(0); transition: opacity 0.35s ease, transform 0.35s ease; }
+.audio-btn {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--green); border: none; border-radius: 50%;
+  width: 36px; height: 36px; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 10px rgba(30,107,69,0.3);
+  transition: transform .15s, background .2s;
+}
+.audio-btn:active { transform: scale(0.88); }
+.audio-btn.playing { background: var(--gold); animation: pulseBtn 0.6s ease-in-out infinite alternate; }
+@keyframes pulseBtn { from{transform:scale(1);} to{transform:scale(1.12);} }
+
+.opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.opt-btn { background: white; border: 2.5px solid #e5e7eb; border-radius: 14px; padding: 14px 8px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: border-color .18s, background .18s; text-align: center; line-height: 1.3; }
+.opt-btn .oi { font-size: 26px; }
+.opt-btn:hover:not(:disabled) { border-color: var(--green3); background: var(--green-bg); }
+.opt-btn.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.opt-btn.wrong { border-color: #ef4444; background: #fee2e2; color: #b91c1c; }
+
+.fb-bar { border-radius: 16px; padding: 13px 15px; display: none; align-items: flex-start; gap: 12px; margin-bottom: 13px; }
+.fb-bar.show { display: flex; }
+.fb-bar.ok { background: var(--green-bg); }
+.fb-bar.nope { background: #fee2e2; }
+.fb-icon { font-size: 26px; flex-shrink: 0; }
+.fb-title { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+.fb-exp { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+.next-btn { width: 100%; border: none; padding: 17px; border-radius: 16px; font-size: 17px; font-weight: 800; cursor: pointer; display: none; transition: transform .15s; }
+.next-btn.go { background: var(--green); color: white; box-shadow: 0 5px 18px rgba(30,107,69,0.3); }
+.next-btn.retry { background: #ef4444; color: white; box-shadow: 0 5px 18px rgba(239,68,68,0.3); }
+.next-btn:active { transform: scale(0.97); }
+
+/* ══ RESULT ══ */
+#result { background: linear-gradient(170deg, #0d3b26 0%, #1e6b45 100%); align-items: center; justify-content: center; text-align: center; padding: 40px 24px; gap: 18px; overflow-y: auto; }
+.res-moon { font-size: 88px; animation: bounceIn .5s cubic-bezier(.36,1.6,.3,1); }
+@keyframes bounceIn { 0%{transform:scale(0) rotate(-20deg);} 100%{transform:scale(1) rotate(0deg);} }
+.res-title { font-size: 34px; font-weight: 900; color: white; }
+.res-sub { font-size: 15px; color: rgba(255,255,255,.75); }
+.res-cards { display: flex; gap: 12px; width: 100%; }
+.res-card { flex: 1; background: rgba(255,255,255,.13); border-radius: 18px; padding: 18px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; backdrop-filter: blur(8px); }
+.res-card .rv { font-size: 28px; font-weight: 900; color: white; }
+.res-card .rl { font-size: 11px; color: rgba(255,255,255,.7); font-weight: 600; }
+.res-home-btn { background: var(--gold); color: white; border: none; padding: 17px 44px; border-radius: 50px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 28px rgba(244,162,40,.45); margin-top: 8px; transition: transform .15s; }
+.res-home-btn:active { transform: scale(0.96); }
+
+/* ══ PROFILE ══ */
+#profile .scroll { flex: 1; overflow-y: auto; padding: 18px 18px 100px; }
+.profile-hero { background: linear-gradient(135deg, var(--green), var(--green3)); border-radius: 22px; padding: 24px; text-align: center; margin-bottom: 22px; box-shadow: 0 6px 24px rgba(30,107,69,0.3); }
+.profile-hero .pm { font-size: 64px; margin-bottom: 8px; }
+.profile-hero .pn { font-size: 22px; font-weight: 800; color: white; }
+.profile-hero .px { font-size: 13px; color: rgba(255,255,255,.8); margin-top: 4px; }
+.pbar-wrap2 { background: rgba(255,255,255,.2); height: 10px; border-radius: 8px; margin-top: 14px; overflow: hidden; }
+.pbar-fill2 { height: 100%; background: var(--gold); border-radius: 8px; transition: width .6s ease; }
+
+.stats-row { display: flex; gap: 11px; margin-bottom: 22px; }
+.stat-tile { flex: 1; background: white; border-radius: 16px; padding: 16px; text-align: center; box-shadow: var(--shadow); }
+.stat-tile .sv { font-size: 26px; font-weight: 900; color: var(--green); }
+.stat-tile .sl { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 3px; }
+
+.sec-title { font-size: 17px; font-weight: 800; margin-bottom: 14px; }
+.badges-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 11px; margin-bottom: 22px; }
+.badge-tile { background: white; border-radius: 16px; padding: 14px 6px; text-align: center; box-shadow: var(--shadow); }
+.badge-tile .be { font-size: 30px; }
+.badge-tile .bn { font-size: 11px; font-weight: 700; margin-top: 5px; color: var(--text); }
+.badge-tile .bs { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.badge-tile.dim { filter: grayscale(1); opacity: .38; }
+
+.fade-in { animation: fadeUp .28s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+
+/* ══ NACHSPRECHEN ══ */
+.speak-area { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 16px; padding: 10px 0; }
+.mic-btn {
+  width: 88px; height: 88px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--green); color: white; font-size: 36px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(30,107,69,0.35), 0 0 0 0 rgba(30,107,69,0.3);
+  transition: background .2s, transform .15s;
+  position: relative;
+}
+.mic-btn:active { transform: scale(0.93); }
+.mic-btn.listening {
+  background: #ef4444;
+  animation: micPulse 1.2s ease-in-out infinite;
+}
+.mic-btn.done { background: var(--gold); }
+@keyframes micPulse {
+  0%,100% { box-shadow: 0 6px 24px rgba(239,68,68,0.4), 0 0 0 0 rgba(239,68,68,0.35); }
+  50%      { box-shadow: 0 6px 24px rgba(239,68,68,0.4), 0 0 0 18px rgba(239,68,68,0); }
+}
+.speak-status { font-size: 14px; font-weight: 700; color: var(--muted); text-align: center; min-height: 20px; }
+.speak-status.ok { color: var(--green); }
+.speak-status.err { color: #ef4444; }
+.waves { display: flex; align-items: center; gap: 4px; height: 28px; }
+.wave-bar { width: 4px; border-radius: 4px; background: #ef4444; animation: waveAnim 0.6s ease-in-out infinite alternate; }
+.wave-bar:nth-child(1){height:8px;  animation-delay:0s;}
+.wave-bar:nth-child(2){height:18px; animation-delay:.1s;}
+.wave-bar:nth-child(3){height:26px; animation-delay:.2s;}
+.wave-bar:nth-child(4){height:16px; animation-delay:.3s;}
+.wave-bar:nth-child(5){height:10px; animation-delay:.4s;}
+@keyframes waveAnim { from{transform:scaleY(0.4);} to{transform:scaleY(1);} }
+.recognized-text { font-size: 13px; color: var(--muted); background: var(--green-bg); padding: 6px 14px; border-radius: 12px; max-width: 100%; word-break: break-word; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash" class="screen active">
+  <div class="splash-moon">🌙</div>
+  <div class="splash-bubble">Assalamu Alaikum! 👋</div>
+  <div class="splash-name">Nuur</div>
+  <div class="splash-ar">نور</div>
+  <div class="splash-tag">Entdecke den Islam – spielerisch, schritt für schritt, für jedes Alter.</div>
+  <button class="splash-btn" onclick="startApp()">Bismillah – Los geht's ✨</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="app-header">
+    <div class="hbrand"><span class="hm">🌙</span><span class="hn">Nu<span>ur</span></span></div>
+    <div class="hpills">
+      <div class="pill g">🔥 <span id="h-streak">1</span></div>
+      <div class="pill a">⭐ <span id="h-xp">0</span></div>
+    </div>
+  </div>
+  <div class="scroll">
+    <div class="nuur-card">
+      <div class="nm">🌙</div>
+      <div class="nt">
+        <h3 id="banner-msg">Mach weiter, du schaffst das!</h3>
+        <p id="banner-sub">Heute ist ein guter Tag zum Lernen.</p>
+      </div>
+    </div>
+    <div class="sec-title">Dein Lernpfad 🗺️</div>
+    <div class="duo-path" id="duo-path"></div>
+  </div>
+  <div class="bnav">
+    <button class="bnav-btn on" onclick="switchTab('home',this)"><span class="ni">🏠</span>Lernen</button>
+    <button class="bnav-btn" onclick="switchTab('profile',this)"><span class="ni">🌙</span>Profil</button>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="screen">
+  <div class="app-header">
+    <div class="hbrand"><span class="hm">🌙</span><span class="hn">Nu<span>ur</span></span></div>
+    <div class="hpills">
+      <div class="pill g">🔥 <span id="p-streak">1</span></div>
+      <div class="pill a">⭐ <span id="p-xp">0</span></div>
+    </div>
+  </div>
+  <div class="scroll">
+    <div class="profile-hero">
+      <div class="pm">🌙</div>
+      <div class="pn">Mein Profil</div>
+      <div class="px">⭐ <span id="p-xp2">0</span> XP gesammelt</div>
+      <div class="pbar-wrap2"><div class="pbar-fill2" id="p-bar" style="width:0%"></div></div>
+    </div>
+    <div class="sec-title">Statistiken</div>
+    <div class="stats-row">
+      <div class="stat-tile"><div class="sv" id="st-done">0</div><div class="sl">Kapitel</div></div>
+      <div class="stat-tile"><div class="sv" id="st-streak">1</div><div class="sl">Streak 🔥</div></div>
+      <div class="stat-tile"><div class="sv" id="st-xp">0</div><div class="sl">XP ⭐</div></div>
+    </div>
+    <div class="sec-title">Errungenschaften 🏆</div>
+    <div class="badges-grid" id="badges-grid"></div>
+  </div>
+  <div class="bnav">
+    <button class="bnav-btn" onclick="switchTab('home',this)"><span class="ni">🏠</span>Lernen</button>
+    <button class="bnav-btn on" onclick="switchTab('profile',this)"><span class="ni">🌙</span>Profil</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <div class="quiz-top">
+    <button class="quit-btn" onclick="goHome()">✕</button>
+    <div class="pbar-wrap"><div class="pbar-fill" id="pbar" style="width:0%"></div></div>
+    <div class="hearts-row" id="hearts"></div>
+  </div>
+  <div class="quiz-body fade-in" id="quiz-body"></div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <div class="res-moon" id="res-moon">🌙</div>
+  <div class="res-title">Masha'Allah!</div>
+  <div class="res-sub" id="res-sub">Kapitel geschafft!</div>
+  <div class="res-cards">
+    <div class="res-card"><div class="rv" id="rv-xp">+15</div><div class="rl">XP</div></div>
+    <div class="res-card"><div class="rv" id="rv-acc">100%</div><div class="rl">Genauigkeit</div></div>
+    <div class="res-card"><div class="rv" id="rv-str">1🔥</div><div class="rl">Streak</div></div>
+  </div>
+  <button class="res-home-btn" onclick="finishAndHome()">Weiter →</button>
+</div>
+
+<!-- OVERLAY -->
+<div class="ov-bg" id="ov-bg">
+  <div class="ov-card">
+    <button class="ov-close" onclick="closeOv()">✕</button>
+    <div class="ov-moon" id="ov-moon">🌙</div>
+    <div class="ov-title" id="ov-title"></div>
+    <div class="ov-desc" id="ov-desc"></div>
+    <div class="ov-chips" id="ov-chips"></div>
+    <button class="start-btn" onclick="startLesson()">Lektion starten 🚀</button>
+  </div>
+</div>
+
+<script>
+// ══ STATE ══
+let xp = 0, streak = 1, done = [], currentLessonId = null;
+let cLesson = null, cQ = 0, hearts = 3, cCorrect = 0, answered = false;
+let wrongQs = [];       // falsche Fragen für Wiederholung
+let reviewMode = false; // gerade in Wiederholung?
+let reviewQs = [];      // Kopie der falsch beantworteten
+let reviewIdx = 0;
+
+// ══ SECTIONS ══
+const sections = [
+  { label: "Abschnitt 1: Grundlagen", icon: "🌟", chapterIds: [0,1,2] },
+  { label: "Abschnitt 2: Gebete & Duas", icon: "🤲", chapterIds: [3,4] },
+  { label: "Abschnitt 3: Die Propheten", icon: "📖", chapterIds: [5,6,7,8,9] },
+];
+
+// ══ CHAPTERS ══
+const chapters = [
+  {
+    id:0, title:"Die 5 Säulen", icon:"🕌",
+    desc:"Lerne die fünf Grundpfeiler des islamischen Glaubens kennen.",
+    topics:["Schahada","Salat","Zakat","Saum","Hadsch"], xp:15,
+    tutorLines:["Lass uns starten! Die 5 Säulen sind das Fundament des Islam. 💪","Schau dir die arabischen Wörter an – und drück den Lautsprecher!"],
+    questions:[
+      { q:"Was ist die Schahada?", ar:"أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا ٱللَّٰهُ", tr:"Aschhadu an laa ilaaha illallaah", audio:"أشهد أن لا إله إلا الله",
+        opts:[{i:"🗣️",t:"Das Glaubensbekenntnis",c:true},{i:"🙏",t:"Das tägliche Gebet",c:false},{i:"💰",t:"Die Almosensteuer",c:false},{i:"✈️",t:"Die Pilgerfahrt",c:false}],
+        exp:"Die Schahada ist das Glaubensbekenntnis: Es gibt keinen Gott außer Allah und Muhammad ﷺ ist Sein Gesandter. ✨"},
+      { q:"Wie viele Male täglich beten Muslime?", ar:"الصَّلَاة", tr:"as Salaah", audio:"الصلاة",
+        opts:[{i:"3️⃣",t:"3 Mal",c:false},{i:"5️⃣",t:"5 Mal",c:true},{i:"7️⃣",t:"7 Mal",c:false},{i:"1️⃣",t:"1 Mal",c:false}],
+        exp:"Das Salat-Gebet wird 5 Mal täglich verrichtet: Fajr, Dhuhr, Asr, Maghrib und Isha. 🙏"},
+      { q:"Was ist die Zakat?", ar:"الزَّكَاة", tr:"az Zakaat", audio:"الزكاة",
+        opts:[{i:"🍽️",t:"Fasten",c:false},{i:"💰",t:"Pflichtabgabe für Arme",c:true},{i:"🕋",t:"Pilgerfahrt",c:false},{i:"📖",t:"Quran lesen",c:false}],
+        exp:"Zakat ist die Pflichtabgabe – 2,5% des Ersparten gehen an Bedürftige. Sie reinigt das Herz und das Vermögen. 💛"},
+      { q:"In welchem Monat fasten Muslime?", ar:"رَمَضَان", tr:"Ra ma daan", audio:"رمضان",
+        opts:[{i:"🌙",t:"Ramadan",c:true},{i:"⭐",t:"Muharram",c:false},{i:"🌟",t:"Rajab",c:false},{i:"☀️",t:"Sha'ban",c:false}],
+        exp:"Im heiligen Monat Ramadan fasten Muslime von Sonnenaufgang bis Sonnenuntergang zur Gottesnähe und Selbstreinigung. 🌙"},
+      { q:"Was ist der Hadsch?", ar:"الْحَجّ", tr:"al Hadj", audio:"الحج",
+        opts:[{i:"🤲",t:"Ein Gebet",c:false},{i:"✈️",t:"Pilgerfahrt nach Mekka",c:true},{i:"📖",t:"Eine Sure",c:false},{i:"🌙",t:"Ein Feiertag",c:false}],
+        exp:"Der Hadsch ist die Pilgerfahrt nach Mekka – einmal im Leben Pflicht für jeden Muslim der dazu in der Lage ist. 🕋"}
+    ]
+  },
+  {
+    id:1, title:"Arabisch A: Alif bis Jim", icon:"🔤",
+    desc:"Lerne die ersten arabischen Buchstaben – wie ABC, nur auf Arabisch!",
+    topics:["Alif","Ba","Ta","Tha","Jim"], xp:20,
+    tutorLines:["Das arabische Alphabet hat 28 Buchstaben – wir starten mit den ersten 5! 🌟","Drück auf den Lautsprecher um die Aussprache zu hören!"],
+    questions:[
+      { q:"Welcher Buchstabe ist das?", ar:"ا", tr:"A lif", audio:"أَلِف",
+        opts:[{i:"",t:"Alif (ا)",c:true},{i:"",t:"Ba (ب)",c:false},{i:"",t:"Jim (ج)",c:false},{i:"",t:"Dal (د)",c:false}],
+        exp:"Alif (ا) ist der erste Buchstabe des arabischen Alphabets. Er klingt wie ein langer 'A'-Laut. ✨"},
+      { q:"Welcher Buchstabe ist das?", ar:"ب", tr:"Baa", audio:"بَا",
+        opts:[{i:"",t:"Ta (ت)",c:false},{i:"",t:"Ba (ب)",c:true},{i:"",t:"Alif (ا)",c:false},{i:"",t:"Nun (ن)",c:false}],
+        exp:"Ba (ب) klingt wie das deutsche 'B'. Er hat einen Punkt unten – erkennst du ihn? 👇"},
+      { q:"Welcher Buchstabe ist das?", ar:"ت", tr:"Taa", audio:"تَا",
+        opts:[{i:"",t:"Tha (ث)",c:false},{i:"",t:"Ta (ت)",c:true},{i:"",t:"Ba (ب)",c:false},{i:"",t:"Nun (ن)",c:false}],
+        exp:"Ta (ت) klingt wie das deutsche 'T'. Er sieht aus wie Ba, hat aber zwei Punkte oben! 🔝"},
+      { q:"Wie viele Punkte hat Tha (ث)?", ar:"ث", tr:"Thaa wie th in think", audio:"ثَا",
+        opts:[{i:"1️⃣",t:"Einen Punkt",c:false},{i:"2️⃣",t:"Zwei Punkte",c:false},{i:"3️⃣",t:"Drei Punkte",c:true},{i:"0️⃣",t:"Keinen Punkt",c:false}],
+        exp:"Tha (ث) hat drei Punkte oben! Er klingt wie das englische 'th' in 'think'. Drei Punkte = 3️⃣"},
+      { q:"Welcher Buchstabe ist Jim?", ar:"ج", tr:"Jiim wie J", audio:"جيم",
+        opts:[{i:"",t:"ح (Ha)",c:false},{i:"",t:"خ (Kha)",c:false},{i:"",t:"ج (Jim)",c:true},{i:"",t:"ع (Ain)",c:false}],
+        exp:"Jim (ج) klingt wie das deutsche 'J'. Er hat einen Punkt in der Mitte unten – erkennst du ihn? 😄"}
+    ]
+  },
+  {
+    id:2, title:"Arabisch B: Dal bis Shin", icon:"✍️",
+    desc:"Weiter geht's mit den nächsten arabischen Buchstaben!",
+    topics:["Dal","Ra","Sin","Shin","Sad"], xp:20,
+    tutorLines:["Super Fortschritt! Jetzt kommen die nächsten Buchstaben. 💪","Du lernst gerade echtes Arabisch – das ist mega!"],
+    questions:[
+      { q:"Welcher Buchstabe ist das?", ar:"د", tr:"Daal wie D", audio:"دال",
+        opts:[{i:"",t:"Dal (د)",c:true},{i:"",t:"Ra (ر)",c:false},{i:"",t:"Waw (و)",c:false},{i:"",t:"Zain (ز)",c:false}],
+        exp:"Dal (د) klingt wie das deutsche 'D'. Er sieht aus wie ein kleiner Buckel! 🐪"},
+      { q:"Welcher Buchstabe ist das?", ar:"ر", tr:"Raa leicht gerollt", audio:"رَا",
+        opts:[{i:"",t:"Dal (د)",c:false},{i:"",t:"Ra (ر)",c:true},{i:"",t:"Waw (و)",c:false},{i:"",t:"Nun (ن)",c:false}],
+        exp:"Ra (ر) klingt wie ein leicht gerolltes 'R'. Er ist dem Dal ähnlich, aber länger gezogen."},
+      { q:"Wie klingt der Buchstabe Sin (س)?", ar:"س", tr:"Siin wie S in Sonne", audio:"سين",
+        opts:[{i:"🔊",t:"Wie 'S' in Sonne",c:true},{i:"🔊",t:"Wie 'Sch' in Schule",c:false},{i:"🔊",t:"Wie 'Z' in Zebra",c:false},{i:"🔊",t:"Wie 'W' in Wasser",c:false}],
+        exp:"Sin (س) klingt wie das deutsche 'S' wie in Sonne oder Salaam! ☀️"},
+      { q:"Wie viele Punkte hat Shin (ش)?", ar:"ش", tr:"Schiin wie Sch in Schule", audio:"شين",
+        opts:[{i:"1️⃣",t:"Einen Punkt",c:false},{i:"2️⃣",t:"Zwei Punkte",c:false},{i:"3️⃣",t:"Drei Punkte",c:true},{i:"0️⃣",t:"Keinen Punkt",c:false}],
+        exp:"Shin (ش) sieht aus wie Sin, hat aber drei Punkte oben. Er klingt wie Sch in Schule! 🏫"},
+      { q:"Welcher Buchstabe ist das?", ar:"ص", tr:"Saad tiefer S Laut", audio:"صاد",
+        opts:[{i:"",t:"Sin (س)",c:false},{i:"",t:"Shin (ش)",c:false},{i:"",t:"Sad (ص)",c:true},{i:"",t:"Dad (ض)",c:false}],
+        exp:"Sad (ص) ist ein tiefer kräftiger S Laut der tief aus dem Mund kommt. Übung macht den Meister! 💪"}
+    ]
+  },
+  {
+    id:3, title:"Morgen & Abend Duas", icon:"🌅",
+    desc:"Lerne die Duas für den Morgen und den Abend – für einen gesegneten Tag!",
+    topics:["Aufwachen","Alhamdulillah","Vor dem Schlafen","Ayat al-Kursi","Subhanallah"], xp:15,
+    tutorLines:["Duas sind Bittgebete – wir sprechen damit direkt mit Allah! 🤲","Diese Duas schützen dich täglich – lerne sie auswendig!"],
+    questions:[
+      { q:"Was sagt man beim Aufwachen?", ar:"اَلْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا", tr:"Alhamdulillahi lladhii ahjaana", audio:"الحمد لله الذي أحيانا بعد ما أماتنا",
+        opts:[{i:"☀️",t:"Dua beim Aufwachen",c:true},{i:"🌙",t:"Dua vor dem Schlafen",c:false},{i:"🍽️",t:"Dua vor dem Essen",c:false},{i:"🚗",t:"Dua für die Reise",c:false}],
+        exp:"Beim Aufwachen sagt man: Alhamdulillahi lladhii ahjaana. Lob sei Allah der uns wieder das Leben geschenkt hat! 🌅"},
+      { q:"Was bedeutet 'Alhamdulillah'?", ar:"اَلْحَمْدُ لِلَّٰهِ", tr:"Al hamdu lillaah", audio:"الحمد لله",
+        opts:[{i:"🌟",t:"Lob sei Allah",c:true},{i:"🙏",t:"Im Namen Allahs",c:false},{i:"✨",t:"Allah ist groß",c:false},{i:"❤️",t:"Allah vergebe mir",c:false}],
+        exp:"Alhamdulillah bedeutet: Lob und Dank sei Allah. Man sagt es nach guten Dingen und als Zeichen der Dankbarkeit. 💛"},
+      { q:"Was sagt man vor dem Schlafen?", ar:"بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", tr:"Bismika Allahumma amutu wa ahja", audio:"باسمك اللهم أموت وأحيا",
+        opts:[{i:"🌙",t:"Bismika Allahumma",c:true},{i:"☀️",t:"Dua beim Aufwachen",c:false},{i:"🍽️",t:"Dua vor dem Essen",c:false},{i:"🏠",t:"Dua beim Eintreten",c:false}],
+        exp:"Vor dem Schlafen sagt man: Bismika Allahumma amutu wa ahja. In Deinem Namen o Allah schlafe und wache ich auf. 🌙"},
+      { q:"Was ist Ayat al-Kursi?", ar:"آيَةُ الْكُرْسِيّ", tr:"Aajat al Kursi", audio:"آية الكرسي",
+        opts:[{i:"🛡️",t:"Ein Schutzvers aus dem Quran",c:true},{i:"📖",t:"Eine Sure im Quran",c:false},{i:"🤲",t:"Ein Morgengebet",c:false},{i:"🌙",t:"Ein Feiertag",c:false}],
+        exp:"Ayat al Kursi ist ein mächtiger Schutzvers aus Sure Al Baqara. Wer ihn jeden Abend liest ist bis zum Morgen geschützt! 🛡️"},
+      { q:"Was bedeutet 'Subhanallah'?", ar:"سُبْحَانَ اللَّٰهِ", tr:"Sub haa nallaah", audio:"سبحان الله",
+        opts:[{i:"✨",t:"Allah ist vollkommen",c:true},{i:"🌟",t:"Allah ist groß",c:false},{i:"🙏",t:"Im Namen Allahs",c:false},{i:"💛",t:"Lob sei Allah",c:false}],
+        exp:"Subhanallah bedeutet: Gepriesen sei Allah – man sagt es wenn man etwas Wunderschönes oder Erstaunliches sieht! 🌿"},
+      { type:"speak", q:"Sprich diese Dua laut nach!", ar:"اَلْحَمْدُ لِلَّٰهِ", tr:"Al hamdu lillaah", audio:"الحمد لله",
+        keyword:"الحمد", keywordSimple:"alhamd",
+        exp:"Alhamdulillah! Lob sei Allah. Sag es jeden Morgen wenn du aufwachst! 🌅"},
+      { type:"speak", q:"Sprich die Morgen-Dua nach!", ar:"اَلْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا", tr:"Alhamdulillahi lladhii ahjaana", audio:"الحمد لله الذي أحيانا بعد ما أماتنا",
+        keyword:"الحمد", keywordSimple:"alhamd",
+        exp:"Mashallah! Diese Dua sagst du jeden Morgen beim Aufwachen. Allah hat dir einen neuen Tag geschenkt! 🌅"},
+      { type:"speak", q:"Sprich die Schlaf-Dua nach!", ar:"بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", tr:"Bismika Allahumma amutu wa ahja", audio:"باسمك اللهم أموت وأحيا",
+        keyword:"بسمك", keywordSimple:"bism",
+        exp:"Perfekt! Diese Dua sprichst du jeden Abend vor dem Schlafen. Allah schützt dich die ganze Nacht! 🌙"},
+      { type:"speak", q:"Sprich Subhanallah nach!", ar:"سُبْحَانَ اللَّٰهِ", tr:"Sub haa nallaah", audio:"سبحان الله",
+        keyword:"سبحان", keywordSimple:"subhan",
+        exp:"SubhanAllah! Gepriesen sei Allah. Sag es wenn du etwas Wunderschönes siehst! 🌿"}
+    ]
+  },
+  {
+    id:4, title:"Duas im Alltag", icon:"🤲",
+    desc:"Für jede Situation gibt es eine Dua. Lerne die Duas des Alltags!",
+    topics:["Essen","Haus betreten","Spiegel","Insha'Allah","Toilette"], xp:15,
+    tutorLines:["Im Islam gibt es für alles eine Dua – jeder Moment wird besonders! 🌟","Diese Duas machen deinen Alltag zu Ibadat!"],
+    questions:[
+      { q:"Was sagt man VOR dem Essen?", ar:"بِسْمِ اللَّهِ", tr:"Bis mil laah", audio:"بسم الله",
+        opts:[{i:"🍽️",t:"Bismillah",c:true},{i:"🌟",t:"Alhamdulillah",c:false},{i:"☀️",t:"Subhanallah",c:false},{i:"🙏",t:"Allahu Akbar",c:false}],
+        exp:"Vor dem Essen sagt man Bismillah. Im Namen Allahs. So wird das Essen gesegnet! 🍽️"},
+      { q:"Was sagt man NACH dem Essen?", ar:"اَلْحَمْدُ لِلَّٰهِ", tr:"Al hamdu lillaah", audio:"الحمد لله",
+        opts:[{i:"💛",t:"Alhamdulillah",c:true},{i:"🙏",t:"Bismillah",c:false},{i:"🌙",t:"Subhanallah",c:false},{i:"✨",t:"Insha'Allah",c:false}],
+        exp:"Nach dem Essen sagt man Alhamdulillah. Dank sei Allah. Dankbarkeit für das Essen ist Sunnah! 💛"},
+      { q:"Was sagt man beim Eintreten des Hauses?", ar:"بِسْمِ اللَّهِ وَلَجْنَا", tr:"Bismillaahi walad schna", audio:"بسم الله ولجنا",
+        opts:[{i:"🏠",t:"Bismillahi walajna",c:true},{i:"🌙",t:"A'udhu billah",c:false},{i:"✨",t:"Allahu Akbar",c:false},{i:"🙏",t:"Subhanallah",c:false}],
+        exp:"Beim Eintreten des Hauses sagt man Bismillahi walajna und grüßt mit Salam. Das bringt Segen ins Haus! 🏠"},
+      { q:"Was bedeutet 'Insha'Allah'?", ar:"إِنْ شَاءَ ٱللَّٰهُ", tr:"In schaa allaah", audio:"إن شاء الله",
+        opts:[{i:"🤝",t:"So Allah will",c:true},{i:"❤️",t:"Allah liebt dich",c:false},{i:"🌟",t:"Allah ist einzig",c:false},{i:"🙏",t:"Danke Allah",c:false}],
+        exp:"Insha Allah bedeutet: So Allah will. Es drückt aus dass alles in Allahs Hand liegt. Man sagt es bei Zukunftsplänen! 🌟"},
+      { q:"Was sagt man beim Anblicken im Spiegel?", ar:"اللَّهُمَّ حَسَّنْتَ خَلْقِي", tr:"Allahumma hassanta chalqi", audio:"اللهم حسنت خلقي فحسن خلقي",
+        opts:[{i:"🪞",t:"Allahumma hasanta khalqi",c:true},{i:"🌙",t:"Bismillah",c:false},{i:"🌟",t:"Subhanallah",c:false},{i:"🙏",t:"Alhamdulillah",c:false}],
+        exp:"Beim Anblicken des Spiegels betet man: O Allah wie Du mein Äußeres schön gemacht hast mach auch mein Inneres schön! 🪞✨"},
+      { type:"speak", q:"Sprich nach: Bismillah – vor dem Essen!", ar:"بِسْمِ اللَّهِ", tr:"Bis mil laah", audio:"بسم الله",
+        keyword:"بسم", keywordSimple:"bism",
+        exp:"Mashallah! Bismillah sprichst du jetzt vor jedem Essen. Das ist Sunnah! 🍽️"},
+      { type:"speak", q:"Sprich nach: Alhamdulillah – nach dem Essen!", ar:"اَلْحَمْدُ لِلَّٰهِ", tr:"Al hamdu lillaah", audio:"الحمد لله",
+        keyword:"الحمد", keywordSimple:"alhamd",
+        exp:"Alhamdulillah! Dank sei Allah für das Essen. Sag das nach jeder Mahlzeit! 💛"},
+      { type:"speak", q:"Sprich die Haus-Dua nach!", ar:"بِسْمِ اللَّهِ وَلَجْنَا", tr:"Bismillaahi walajna", audio:"بسم الله ولجنا",
+        keyword:"بسم", keywordSimple:"bism",
+        exp:"Super! Diese Dua sagst du wenn du das Haus betrittst. Sie bringt Segen und Schutz ins Heim! 🏠"},
+      { type:"speak", q:"Sprich nach: Insha'Allah!", ar:"إِنْ شَاءَ ٱللَّٰهُ", tr:"In schaa allaah", audio:"إن شاء الله",
+        keyword:"شاء", keywordSimple:"insha",
+        exp:"Masha'Allah! Insha'Allah sagst du bei allem was du in der Zukunft planst. Allah entscheidet alles! 🌟"},
+      { type:"speak", q:"Sprich die Spiegel-Dua nach!", ar:"اللَّهُمَّ حَسَّنْتَ خَلْقِي", tr:"Allahumma hassanta chalqi", audio:"اللهم حسنت خلقي فحسن خلقي",
+        keyword:"اللهم", keywordSimple:"allahum",
+        exp:"Wunderschön! Diese Dua sprichst du wenn du in den Spiegel schaust – bitte Allah dein Inneres genauso schön zu machen! 🪞✨"}
+    ]
+  },
+  {
+    id:5, title:"Propheten: Adam & Nuh", icon:"🌿",
+    desc:"Lerne die Geschichten von Adam (as) und Nuh (as).",
+    topics:["Adam (as)","Hawwa","Iblis","Nuh (as)","Die Arche"], xp:20,
+    tutorLines:["Jetzt kommen die Propheten-Geschichten – meine Lieblingsgeschichten! 📖","Allah hat viele Propheten gesandt – jeder hat eine besondere Geschichte!"],
+    questions:[
+      { q:"Wer war der erste Mensch und Prophet?", ar:"آدَمُ عَلَيْهِ السَّلَام", tr:"Aadam alajhi ssalaam", audio:"آدم عليه السلام",
+        opts:[{i:"🌿",t:"Adam (as)",c:true},{i:"🚢",t:"Nuh (as)",c:false},{i:"🔥",t:"Ibrahim (as)",c:false},{i:"⚖️",t:"Musa (as)",c:false}],
+        exp:"Adam (as) war der erste Mensch und der erste Prophet. Allah erschuf ihn aus Erde und blies den Geist in ihn. Alhamdulillah! 🌿"},
+      { q:"Wer war die erste Frau?", ar:"حَوَّاء", tr:"Hawwaa", audio:"حواء",
+        opts:[{i:"🌸",t:"Hawwa (Eva)",c:true},{i:"🌺",t:"Maryam",c:false},{i:"💎",t:"Khadija",c:false},{i:"🌙",t:"Asiya",c:false}],
+        exp:"Hawwa (as) war die erste Frau – die Partnerin von Adam (as). Zusammen waren sie das erste Menschenpaar. 🌸"},
+      { q:"Wer verweigerte es, sich vor Adam zu verneigen?", ar:"إِبْلِيس", tr:"Ibliis", audio:"إبليس",
+        opts:[{i:"😈",t:"Iblis",c:true},{i:"😇",t:"Jibril (as)",c:false},{i:"⚡",t:"Mikail (as)",c:false},{i:"📯",t:"Israfil (as)",c:false}],
+        exp:"Iblis weigerte sich aus Hochmut vor Adam zu verneigen. Deswegen wurde er aus dem Paradies verbannt! 😤"},
+      { q:"Wie lange rief Nuh (as) sein Volk zum Islam?", ar:"نُوحٌ عَلَيْهِ السَّلَام", tr:"Nuuh alajhi ssalaam", audio:"نوح عليه السلام",
+        opts:[{i:"📅",t:"950 Jahre",c:true},{i:"📅",t:"100 Jahre",c:false},{i:"📅",t:"500 Jahre",c:false},{i:"📅",t:"40 Jahre",c:false}],
+        exp:"Nuh (as) rief sein Volk 950 Jahre lang zum Islam ein! Er hatte unglaubliche Geduld. SubhanAllah! 🌊"},
+      { q:"Was baute Nuh (as) auf Allahs Befehl?", ar:"السَّفِينَة", tr:"as Safiina Die Arche", audio:"السفينة",
+        opts:[{i:"🚢",t:"Eine Arche",c:true},{i:"🕌",t:"Eine Moschee",c:false},{i:"🏰",t:"Einen Palast",c:false},{i:"🌉",t:"Eine Brücke",c:false}],
+        exp:"Nuh (as) baute auf Allahs Befehl eine riesige Arche. Sie rettete die Gläubigen und ein Paar von jedem Tier vor der großen Flut! 🚢"}
+    ]
+  },
+  {
+    id:6, title:"Prophet Ibrahim (as)", icon:"🔥",
+    desc:"Die beeindruckende Geschichte des Freundes Allahs – Ibrahim (as).",
+    topics:["Khalilullah","Das Feuer","Ismail","Ka'aba","Opfer"], xp:20,
+    tutorLines:["Ibrahim (as) war der Freund Allahs! Seine Geschichte ist so mutig. 💪","Lerne von Ibrahim (as) – er hatte absolutes Vertrauen in Allah!"],
+    questions:[
+      { q:"Wie wird Ibrahim (as) auch genannt?", ar:"خَلِيلُ اللَّه", tr:"Chalilullaah Freund Allahs", audio:"خليل الله",
+        opts:[{i:"💎",t:"Khalilullah",c:true},{i:"⚖️",t:"Nabiyullah",c:false},{i:"🔥",t:"Rasulullah",c:false},{i:"🌟",t:"Ruhullah",c:false}],
+        exp:"Ibrahim (as) wird Khalilullah genannt – der Freund Allahs! Diese besondere Ehre zeigt wie nah er Allah war. 💛"},
+      { q:"Was geschah als Ibrahim ins Feuer geworfen wurde?", ar:"يَا نَارُ كُونِي بَرْدًا", tr:"Jaa naaru kuunii bardan O Feuer sei kuehl", audio:"يا نار كوني بردا وسلاما",
+        opts:[{i:"❄️",t:"Das Feuer wurde kühl",c:true},{i:"🔥",t:"Er verbrannte",c:false},{i:"🌊",t:"Wasser löschte es",c:false},{i:"💨",t:"Wind blies ihn weg",c:false}],
+        exp:"Allah sagte zum Feuer: Sei kühl und sicher für Ibrahim! Das Feuer gehorchte Allah und Ibrahim blieb unverletzt. Allahu Akbar! ❄️"},
+      { q:"Wer baute zusammen mit Ibrahim die Ka'aba?", ar:"إِسْمَاعِيل عَلَيْهِ السَّلَام", tr:"Ismaaiil alajhi ssalaam", audio:"إسماعيل عليه السلام",
+        opts:[{i:"🕋",t:"Sein Sohn Ismail (as)",c:true},{i:"🌊",t:"Ishaq (as)",c:false},{i:"⚖️",t:"Musa (as)",c:false},{i:"🌙",t:"Muhammad ﷺ",c:false}],
+        exp:"Ibrahim (as) baute zusammen mit seinem Sohn Ismail (as) die Ka'aba in Mekka. Wir umrunden sie noch heute beim Hadsch! 🕋"},
+      { q:"Was feiern wir zur Erinnerung an Ibrahims Prüfung?", ar:"عِيدُ الْأَضْحَى", tr:"Iid al Adhha", audio:"عيد الأضحى",
+        opts:[{i:"🐑",t:"Eid al-Adha",c:true},{i:"🌙",t:"Eid al-Fitr",c:false},{i:"📖",t:"Laylat al-Qadr",c:false},{i:"🕌",t:"Jumu'ah",c:false}],
+        exp:"Allah prüfte Ibrahim mit seinem Sohn. Als Ibrahim gehorchte sandte Allah ein Tier als Ersatz. Daran erinnert uns Eid al-Adha! 🐑"},
+      { q:"Wozu rief Ibrahim (as) die Menschen auf?", ar:"التَّوْحِيد", tr:"at Tawhiid Die Einheit Allahs", audio:"التوحيد",
+        opts:[{i:"☝️",t:"Nur Allah anzubeten",c:true},{i:"🏛️",t:"Götzen anzubeten",c:false},{i:"💰",t:"Reichtum zu suchen",c:false},{i:"🌊",t:"In den Fluss zu gehen",c:false}],
+        exp:"Ibrahim (as) kämpfte sein ganzes Leben für den Tawhid – die Einheit Allahs. Er zerstörte sogar die Götzen seines Volkes! ☝️"}
+    ]
+  },
+  {
+    id:7, title:"Prophet Musa (as)", icon:"⚖️",
+    desc:"Die großartige Geschichte von Musa (as) – dem Propheten dem Allah direkt sprach.",
+    topics:["Kalimullah","Stab","Rotes Meer","Tawrat","Pharao"], xp:20,
+    tutorLines:["Musa (as) ist einer der mächtigsten Propheten! 🌊","Allah sprach direkt mit Musa (as) – das macht ihn so besonders!"],
+    questions:[
+      { q:"Wie wird Musa (as) auch genannt?", ar:"كَلِيمُ اللَّه", tr:"Kaliimullaah der mit Allah sprach", audio:"كليم الله",
+        opts:[{i:"🗣️",t:"Kalimullah",c:true},{i:"💎",t:"Khalilullah",c:false},{i:"🌟",t:"Habibullah",c:false},{i:"✨",t:"Ruhullah",c:false}],
+        exp:"Musa (as) wird Kalimullah genannt – derjenige mit dem Allah direkt gesprochen hat! Das ist eine riesige Ehre. 🗣️"},
+      { q:"Welches Wunder hatte Musa (as)?", ar:"العَصَا", tr:"al Asaa Der Stab", audio:"العصا",
+        opts:[{i:"🪄",t:"Ein wundersamer Stab",c:true},{i:"🌊",t:"Wasser erschaffen",c:false},{i:"🔥",t:"Feuer nicht verbrennen",c:false},{i:"🕊️",t:"Tote erwecken",c:false}],
+        exp:"Musa (as) hatte einen Stab der sich in eine Schlange verwandeln konnte und das Meer teilte. Allah gab ihm diese Wunder! 🪄"},
+      { q:"Was tat Musa (as) mit dem Roten Meer?", ar:"بَحْرُ الأَحْمَر", tr:"Bahr al Ahmar Rotes Meer", audio:"بحر الأحمر",
+        opts:[{i:"🌊",t:"Er teilte es mit seinem Stab",c:true},{i:"🚢",t:"Er baute ein Schiff",c:false},{i:"🏊",t:"Er schwamm hindurch",c:false},{i:"🌉",t:"Er baute eine Brücke",c:false}],
+        exp:"Auf Allahs Befehl schlug Musa mit seinem Stab aufs Meer – es teilte sich! Die Bani Israel überquerten trockenen Fußes. SubhanAllah! 🌊"},
+      { q:"Wie heißt das Buch das Musa (as) erhielt?", ar:"التَّوْرَاة", tr:"at Tawraat", audio:"التوراة",
+        opts:[{i:"📖",t:"Die Tawrat",c:true},{i:"📖",t:"Die Zabur",c:false},{i:"📖",t:"Das Injil",c:false},{i:"📖",t:"Der Quran",c:false}],
+        exp:"Musa (as) erhielt die Tawrat (Torah) von Allah auf dem Berg Sinai. Sie enthielt Gesetze und Führung für die Bani Israel. 📖"},
+      { q:"Wer war der Feind von Musa (as)?", ar:"فِرْعَوْن", tr:"Firawn Der Pharao", audio:"فرعون",
+        opts:[{i:"👑",t:"Der Pharao",c:true},{i:"😈",t:"Iblis",c:false},{i:"🗡️",t:"Qabun",c:false},{i:"👹",t:"Nimrod",c:false}],
+        exp:"Der Pharao (Fir'awn) war der tyrannische König Ägyptens. Er behauptete selbst ein Gott zu sein – aber Allah ließ ihn im Meer ertrinken. 🌊"}
+    ]
+  },
+  {
+    id:8, title:"Prophet Isa (as)", icon:"✨",
+    desc:"Die wunderbare Geschichte von Isa (as) – der ohne Vater geboren wurde.",
+    topics:["Maryam","Wunder","Injil","Aufstieg","Wiederkehr"], xp:20,
+    tutorLines:["Isa (as) hatte so viele Wunder! Auch Muslime lieben und respektieren ihn. ✨","Wusstest du? Isa (as) wird am Ende der Zeit zurückkehren!"],
+    questions:[
+      { q:"Wie heißt die Mutter von Isa (as)?", ar:"مَرْيَم عَلَيْهَا السَّلَام", tr:"Marjam alajhaa ssalaam", audio:"مريم عليها السلام",
+        opts:[{i:"🌸",t:"Maryam (as)",c:true},{i:"💎",t:"Asiya (as)",c:false},{i:"🌺",t:"Khadija (ra)",c:false},{i:"🌙",t:"Hawwa (as)",c:false}],
+        exp:"Maryam (as) ist die Mutter von Isa (as). Sie ist die ehrenhafteste Frau aller Zeiten – Allah widmet ihr eine ganze Sure im Quran! 🌸"},
+      { q:"Wie wurde Isa (as) geboren?", ar:"بِكَلِمَةٍ مِّنْهُ", tr:"Bi kalimatin minhu durch ein Wort von Ihm", audio:"عيسى عليه السلام",
+        opts:[{i:"✨",t:"Ohne Vater durch Allahs Befehl",c:true},{i:"👫",t:"Wie alle anderen Menschen",c:false},{i:"🌙",t:"Aus Licht erschaffen",c:false},{i:"🌊",t:"Aus dem Meer",c:false}],
+        exp:"Isa (as) wurde ohne Vater geboren – Allah sagte nur Sei! und er war. Genauso wie Adam ohne Eltern erschaffen wurde. Allahu Akbar! ✨"},
+      { q:"Welches Buch erhielt Isa (as)?", ar:"الْإِنْجِيل", tr:"al Injiil", audio:"الإنجيل",
+        opts:[{i:"📖",t:"Das Injil",c:true},{i:"📖",t:"Die Tawrat",c:false},{i:"📖",t:"Die Zabur",c:false},{i:"📖",t:"Der Quran",c:false}],
+        exp:"Isa (as) erhielt das Injil von Allah – die frohe Botschaft. Er ist ein großer Prophet des Islam! 📖"},
+      { q:"Was geschah am Ende des Lebens von Isa (as)?", ar:"رَفَعَهُ اللَّهُ", tr:"Rafaaahu llaah Allah erhob ihn", audio:"رفعه الله إليه",
+        opts:[{i:"⬆️",t:"Allah erhob ihn in den Himmel",c:true},{i:"💔",t:"Er wurde gekreuzigt",c:false},{i:"🌊",t:"Er verschwand im Meer",c:false},{i:"🌙",t:"Er wurde ein normaler Mensch",c:false}],
+        exp:"Laut Islam wurde Isa (as) von Allah in den Himmel erhoben – er wurde NICHT gekreuzigt. Er lebt bei Allah und wird zurückkehren! ⬆️"},
+      { q:"Was wird Isa (as) am Ende der Zeit tun?", ar:"نُزُولُ عِيسَى", tr:"Nuzuul Iisaa Die Wiederkunft", audio:"نزول عيسى عليه السلام",
+        opts:[{i:"🌍",t:"Er kehrt zur Erde zurück",c:true},{i:"📖",t:"Er bringt einen neuen Quran",c:false},{i:"🕌",t:"Er baut Mekka neu",c:false},{i:"🌊",t:"Er teilt das Meer",c:false}],
+        exp:"Isa (as) wird am Ende der Zeit zur Erde zurückkehren! Er wird den Dajjal besiegen und Gerechtigkeit bringen. Das ist unsere Überzeugung! 🌍"}
+    ]
+  },
+  {
+    id:9, title:"Prophet Muhammad ﷺ", icon:"🌙",
+    desc:"Das Leben des letzten und liebsten Propheten – Muhammad ﷺ.",
+    topics:["Geburt in Mekka","Erste Offenbarung","Hijra","Charakter","Sunnah"], xp:25,
+    tutorLines:["Wir lernen über den besten Menschen der je gelebt hat! 🌙","Möge Allahs Frieden und Segen auf Muhammad ﷺ sein!"],
+    questions:[
+      { q:"In welcher Stadt wurde Muhammad ﷺ geboren?", ar:"مَكَّة المُكَرَّمَة", tr:"Makka al Mukarrama", audio:"مكة المكرمة",
+        opts:[{i:"🕌",t:"Mekka",c:true},{i:"🌙",t:"Medina",c:false},{i:"🌟",t:"Jerusalem",c:false},{i:"🌍",t:"Taif",c:false}],
+        exp:"Muhammad ﷺ wurde in der heiligen Stadt Mekka geboren – am 12. Rabi al-Awwal. Wir feiern diesen gesegneten Tag! 🕌"},
+      { q:"Wie alt war Muhammad ﷺ bei der ersten Offenbarung?", ar:"نُزُولُ الْوَحْي", tr:"Nuzuul al Wahj Die erste Offenbarung", audio:"نزول الوحي",
+        opts:[{i:"4️⃣",t:"40 Jahre",c:true},{i:"3️⃣",t:"30 Jahre",c:false},{i:"2️⃣",t:"25 Jahre",c:false},{i:"5️⃣",t:"50 Jahre",c:false}],
+        exp:"Muhammad ﷺ war 40 Jahre alt als der Engel Jibril (as) ihm in der Höhle Hira erschien und Iqra! (Lies!) sagte. 📖"},
+      { q:"Was bedeutet 'Rasulullah'?", ar:"رَسُولُ اللَّه", tr:"Rasuu lullaah", audio:"رسول الله",
+        opts:[{i:"🌟",t:"Gesandter Allahs",c:true},{i:"💎",t:"Freund Allahs",c:false},{i:"🗣️",t:"Der mit Allah sprach",c:false},{i:"✨",t:"Geist Allahs",c:false}],
+        exp:"Rasulullah bedeutet Gesandter Allahs. Muhammad ﷺ ist das Siegel der Propheten – nach ihm kommt kein Prophet mehr. ☝️"},
+      { q:"Was ist die Hijra?", ar:"الْهِجْرَة", tr:"al Hidschra", audio:"الهجرة",
+        opts:[{i:"🚶",t:"Auswanderung nach Medina",c:true},{i:"🕋",t:"Pilgerfahrt nach Mekka",c:false},{i:"📖",t:"Erste Offenbarung",c:false},{i:"🌙",t:"Das Fastenbrechen",c:false}],
+        exp:"Die Hijra ist die Auswanderung des Propheten ﷺ von Mekka nach Medina. Dieses Ereignis markiert den Beginn des islamischen Kalenders! 🚶"},
+      { q:"Wie beschrieb Aisha (ra) seinen Charakter?", ar:"خُلُقُهُ الْقُرْآن", tr:"Chuluquhu al Quraan Sein Charakter war der Quran", audio:"كان خلقه القرآن",
+        opts:[{i:"📖",t:"Sein Charakter war der Quran",c:true},{i:"💪",t:"Er war der stärkste Krieger",c:false},{i:"💰",t:"Er war der reichste Mann",c:false},{i:"🌍",t:"Er war der klügste König",c:false}],
+        exp:"Aisha (ra) sagte: Sein Charakter war der Quran. Muhammad ﷺ lebte jeden Vers des Quran. Er war der vollkommenste Mensch! 🌙💛"}
+    ]
+  }
+];
+
+const badges = [
+  {id:"start",   icon:"🌟", name:"Erster Schritt",  desc:"Erste Lektion gestartet", cond: s => s.done >= 1},
+  {id:"saeulen", icon:"🕌", name:"5 Säulen",        desc:"Kapitel 1 abgeschlossen", cond: s => s.doneIds.includes(0)},
+  {id:"aleph",   icon:"🔤", name:"Alif-Ba-Ta",      desc:"Alphabet gelernt",        cond: s => s.doneIds.includes(1)},
+  {id:"dua",     icon:"🤲", name:"Dua-Meister",     desc:"Beide Dua-Kapitel done",  cond: s => s.doneIds.includes(3)&&s.doneIds.includes(4)},
+  {id:"prophet", icon:"📖", name:"Historiker",      desc:"3 Propheten-Kapitel",     cond: s => [5,6,7,8,9].filter(x=>s.doneIds.includes(x)).length>=3},
+  {id:"finish",  icon:"🏆", name:"Nuur-Champion",   desc:"Alle 10 Kapitel!",        cond: s => s.done >= 10},
+];
+
+// ══ AUDIO ══
+function speak(text, btnEl) {
+  if (btnEl) { btnEl.classList.add('playing'); btnEl.textContent = '🔉'; }
+
+  // Primär: Google Translate TTS (funktioniert ohne Installation)
+  const url = 'https://translate.google.com/translate_tts?ie=UTF-8&q='
+    + encodeURIComponent(text) + '&tl=ar&client=tw-ob&ttsspeed=0.8';
+
+  const audio = new Audio(url);
+  audio.onended = () => { if (btnEl) { btnEl.classList.remove('playing'); btnEl.textContent = '🔊'; } };
+  audio.onerror = () => {
+    // Fallback: Browser speechSynthesis
+    if (window.speechSynthesis) {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'ar-SA'; utter.rate = 0.78;
+      const arVoice = window.speechSynthesis.getVoices().find(v => v.lang && v.lang.startsWith('ar'));
+      if (arVoice) utter.voice = arVoice;
+      utter.onend = () => { if (btnEl) { btnEl.classList.remove('playing'); btnEl.textContent = '🔊'; } };
+      window.speechSynthesis.speak(utter);
+    } else {
+      if (btnEl) { btnEl.classList.remove('playing'); btnEl.textContent = '🔊'; }
+    }
+  };
+  audio.play().catch(() => audio.onerror());
+}
+
+// ══ PATH BUILD ══
+function buildPath() {
+  const wrap = document.getElementById('duo-path');
+  wrap.innerHTML = '';
+  const positions = ['pos-center','pos-right','pos-center','pos-left','pos-center','pos-right','pos-center','pos-left','pos-center','pos-right'];
+
+  // Map chapterId -> section
+  const chapterSection = {};
+  sections.forEach(sec => sec.chapterIds.forEach(cid => chapterSection[cid] = sec));
+
+  let sectionShown = new Set();
+
+  chapters.forEach((ch, i) => {
+    const sec = chapterSection[ch.id];
+    if (sec && !sectionShown.has(sec.label)) {
+      sectionShown.add(sec.label);
+      const banner = document.createElement('div');
+      banner.className = 'path-section-banner';
+      banner.innerHTML = `<div class="psb-icon">${sec.icon}</div><div class="psb-text"><h4>${sec.label}</h4><p>${sec.chapterIds.length} Kapitel</p></div>`;
+      wrap.appendChild(banner);
+    }
+
+    if (i > 0) {
+      const conn = document.createElement('div');
+      conn.className = 'duo-connector' + (done.includes(i-1) ? ' done-line' : '');
+      wrap.appendChild(conn);
+    }
+
+    const isDone   = done.includes(i);
+    const isActive = !isDone; // alle freigeschaltet
+    const isLocked = false;
+    const pos      = positions[i];
+
+    const row = document.createElement('div');
+    row.className = 'duo-step';
+
+    const nodeRow = document.createElement('div');
+    nodeRow.className = 'duo-node-row ' + pos;
+
+    const nodeWrap = document.createElement('div');
+    nodeWrap.style.display = 'flex';
+    nodeWrap.style.flexDirection = 'column';
+    nodeWrap.style.alignItems = 'center';
+
+    const node = document.createElement('div');
+    node.className = 'duo-node ' + (isDone ? 'done' : isActive ? 'active' : 'locked');
+    node.innerHTML = `<span class="chapter-badge">${i+1}</span>${isDone ? '✅' : isLocked ? '🔒' : ch.icon}`;
+    if (!isLocked) node.onclick = () => openLesson(i);
+
+    const lbl = document.createElement('div');
+    lbl.className = 'duo-node-label';
+    lbl.textContent = ch.title;
+
+    nodeWrap.appendChild(node);
+    nodeWrap.appendChild(lbl);
+
+    if (isActive) {
+      const pill = document.createElement('button');
+      pill.className = 'duo-start-pill';
+      pill.textContent = 'START ▶';
+      pill.onclick = () => openLesson(i);
+      nodeWrap.appendChild(pill);
+    }
+
+    nodeRow.appendChild(nodeWrap);
+    row.appendChild(nodeRow);
+    wrap.appendChild(row);
+  });
+}
+
+// ══ LESSON ══
+function openLesson(id) {
+  currentLessonId = id;
+  const ch = chapters[id];
+  document.getElementById('ov-moon').textContent = ch.icon;
+  document.getElementById('ov-title').textContent = ch.icon + ' ' + ch.title;
+  document.getElementById('ov-desc').textContent = ch.desc;
+  document.getElementById('ov-chips').innerHTML =
+    ch.topics.map(t=>`<span class="ov-chip">${t}</span>`).join('') +
+    `<span class="ov-xp">⭐ +${ch.xp} XP</span>`;
+  document.getElementById('ov-bg').classList.add('open');
+}
+function closeOv() { document.getElementById('ov-bg').classList.remove('open'); }
+
+function startLesson() {
+  closeOv();
+  cLesson = chapters[currentLessonId];
+  cQ = 0; hearts = 3; cCorrect = 0; answered = false;
+  wrongQs = []; reviewMode = false; reviewQs = []; reviewIdx = 0;
+  showScreen('quiz');
+  renderQ();
+}
+
+function makeTrChips(tr) {
+  return tr.split(' ').map(w => `<span class="tr-chip">${w}</span>`).join('');
+}
+
+// ══ SPEECH RECOGNITION ══
+let recognition = null;
+let recognitionActive = false;
+
+function initRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  const r = new SR();
+  r.lang = 'ar-SA';
+  r.interimResults = true;
+  r.maxAlternatives = 5;
+  r.continuous = false;
+  return r;
+}
+
+let speakTimeout = null;
+let currentSpeakQuestion = null;
+
+function showManualEval() {
+  const micBtn = document.getElementById('mic-btn');
+  const status = document.getElementById('speak-status');
+  const manualDiv = document.getElementById('manual-eval');
+  recognitionActive = false;
+  if (micBtn) { micBtn.classList.remove('listening'); micBtn.innerHTML = '🎤'; }
+  if (status) { status.textContent = 'Hast du die Dua laut nachgesprochen?'; status.className = 'speak-status'; }
+  if (manualDiv) manualDiv.style.display = 'flex';
+  const tr = document.getElementById('translit-reveal');
+  if (tr) { tr.classList.remove('translit-hidden'); tr.classList.add('translit-visible'); }
+}
+
+function manualSuccess() {
+  const q = currentSpeakQuestion;
+  document.getElementById('manual-eval').style.display = 'none';
+  const micBtn = document.getElementById('mic-btn');
+  const status = document.getElementById('speak-status');
+  const fb = document.getElementById('fb');
+  const nxt = document.getElementById('nxt');
+  if (micBtn) { micBtn.innerHTML = '✅'; micBtn.classList.add('done'); }
+  if (status) { status.textContent = 'Masha Allah! Weiter so! 🎉'; status.className = 'speak-status ok'; }
+  cCorrect++; xp += 3; updateStats();
+  if (fb) { fb.className = 'fb-bar show ok'; fb.innerHTML = `<span class="fb-icon">✅</span><div><div class="fb-title">Mashallah! Du hast es gesagt! 🎉</div><div class="fb-exp">${q ? q.exp : ''}</div></div>`; }
+  if (nxt) { nxt.className = 'next-btn go'; nxt.style.display = 'block'; }
+  answered = true;
+}
+
+function manualRetry() {
+  document.getElementById('manual-eval').style.display = 'none';
+  const status = document.getElementById('speak-status');
+  if (status) { status.textContent = 'Hör nochmal zu und sprich dann nach! 🎤'; status.className = 'speak-status'; }
+  // Dua nochmal abspielen
+  if (currentSpeakQuestion && currentSpeakQuestion.audio) {
+    speak(currentSpeakQuestion.audio, null);
+  }
+  setTimeout(() => showManualEval(), 3000);
+}
+
+function startListening(question) {
+  if (answered) return;
+  currentSpeakQuestion = question;
+  const micBtn = document.getElementById('mic-btn');
+  const status = document.getElementById('speak-status');
+  const resultDiv = document.getElementById('recognized-result');
+  const manualDiv = document.getElementById('manual-eval');
+
+  // Zuerst die Dua vorlesen
+  speak(question.audio, null);
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    // Kein SR verfügbar – nach kurzer Pause manuelle Bewertung
+    setTimeout(() => showManualEval(), 2500);
+    return;
+  }
+
+  if (recognitionActive) return;
+  recognitionActive = true;
+  recognition = initRecognition();
+
+  micBtn.classList.add('listening');
+  micBtn.innerHTML = '<div class="waves"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>';
+  status.textContent = 'Ich höre zu… sprich jetzt!';
+  status.className = 'speak-status';
+  if (manualDiv) manualDiv.style.display = 'none';
+
+  // Timeout: nach 10 Sek manuelle Bewertung zeigen
+  speakTimeout = setTimeout(() => {
+    if (recognitionActive) {
+      try { recognition.stop(); } catch(e) {}
+      showManualEval();
+    }
+  }, 10000);
+
+  recognition.onresult = (e) => {
+    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+    if (resultDiv) { resultDiv.textContent = '🎤 ' + transcript; resultDiv.style.display = 'block'; }
+
+    if (e.results[0].isFinal) {
+      clearTimeout(speakTimeout);
+      recognitionActive = false;
+      const ok = checkSpeech(transcript, question);
+      micBtn.classList.remove('listening');
+      const tr = document.getElementById('translit-reveal');
+      if (tr) { tr.classList.remove('translit-hidden'); tr.classList.add('translit-visible'); }
+
+      if (ok) {
+        micBtn.innerHTML = '✅';
+        micBtn.classList.add('done');
+        status.textContent = 'Masha Allah! Perfekt! 🎉';
+        status.className = 'speak-status ok';
+        cCorrect++; xp += 3; updateStats();
+        const fb = document.getElementById('fb');
+        fb.className = 'fb-bar show ok';
+        fb.innerHTML = `<span class="fb-icon">✅</span><div><div class="fb-title">Mashallah! Du hast es gesagt! 🎉</div><div class="fb-exp">${question.exp}</div></div>`;
+        const nxt = document.getElementById('nxt');
+        nxt.className = 'next-btn go'; nxt.style.display = 'block';
+        answered = true;
+      } else {
+        micBtn.innerHTML = '🎤';
+        micBtn.classList.remove('listening', 'done');
+        status.textContent = 'Fast! Nochmal versuchen 💪';
+        status.className = 'speak-status err';
+        if (manualDiv) manualDiv.style.display = 'flex';
+      }
+    }
+  };
+
+  recognition.onerror = (e) => {
+    clearTimeout(speakTimeout);
+    recognitionActive = false;
+    micBtn.classList.remove('listening');
+    micBtn.innerHTML = '🎤';
+    // Bei jedem Fehler → manuelle Bewertung
+    showManualEval();
+  };
+
+  recognition.onend = () => { recognitionActive = false; };
+
+  try {
+    recognition.start();
+  } catch(e) {
+    clearTimeout(speakTimeout);
+    recognitionActive = false;
+    showManualEval();
+  }
+}
+
+function checkSpeech(transcript, question) {
+  const t = transcript.trim().toLowerCase().replace(/\s+/g, '');
+  // Arabisch-Matching
+  if (question.keyword && transcript.includes(question.keyword)) return true;
+  // Phonetisch Matching (lateinisch falls jemand lateinisch spricht)
+  if (question.keywordSimple && t.includes(question.keywordSimple)) return true;
+  // Längen-Fuzzy: wenn transkript lang genug und ähnlich
+  if (transcript.length >= 3 && question.ar && transcript.length >= question.ar.replace(/\s/g,'').length * 0.4) return true;
+  return false;
+}
+
+function renderQ() {
+  // Wiederholungsmodus
+  if (reviewMode) {
+    if (reviewIdx >= reviewQs.length) { showResult(); return; }
+    renderReviewQ(); return;
+  }
+  if (cQ >= cLesson.questions.length) {
+    // Normalmodus fertig – gibt es Fehler?
+    if (wrongQs.length > 0) {
+      reviewMode = true;
+      reviewQs = [...wrongQs];
+      reviewIdx = 0;
+      wrongQs = [];
+      renderReviewBanner(); return;
+    }
+    showResult(); return;
+  }
+
+  const q = cLesson.questions[cQ];
+  const total = cLesson.questions.length;
+  document.getElementById('pbar').style.width = (cQ / total * 100) + '%';
+  document.getElementById('hearts').innerHTML = [0,1,2].map(i=>`<span class="hrt${i>=hearts?' gone':''}">❤️</span>`).join('');
+
+  const tutorLine = cLesson.tutorLines[cQ % cLesson.tutorLines.length];
+  const body = document.getElementById('quiz-body');
+  body.className = 'quiz-body fade-in';
+
+  if (q.type === 'speak') {
+    body.innerHTML = `
+      <div class="char-tutor">
+        <span class="tc">🌙</span>
+        <div class="tutor-bubble">Hör zu und sprich laut nach! Tippe auf 🎤 und sprich. 🌙</div>
+      </div>
+      <div class="q-type-lbl" style="color:var(--gold2)">🎤 Nachsprechen – Frage ${cQ+1} von ${total}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="arabic-box">
+        <button class="audio-btn" onclick="speak('${q.audio}', this)" title="Erst anhören">🔊</button>
+        <div class="arabic-big">${q.ar}</div>
+        <div class="translit translit-hidden" id="translit-reveal">${makeTrChips(q.tr)}</div>
+      </div>
+      <div class="speak-area">
+        <button class="mic-btn" id="mic-btn" onclick="startListening(window.currentSpeakQ)">🎤</button>
+        <div class="speak-status" id="speak-status">1. Hör zu 🔊 &nbsp;→&nbsp; 2. Tippe 🎤 &nbsp;→&nbsp; 3. Sprich nach!</div>
+        <div class="recognized-text" id="recognized-result" style="display:none"></div>
+      </div>
+      <div id="manual-eval" style="display:none; flex-direction:column; gap:10px; align-items:center; margin-top:12px; width:100%;">
+        <div style="font-size:13px; color:var(--muted); text-align:center;">Hast du die Dua laut nachgesprochen?</div>
+        <div style="display:flex; gap:10px; width:100%;">
+          <button onclick="manualSuccess()" style="flex:1; background:var(--green); color:white; border:none; border-radius:14px; padding:14px 10px; font-size:15px; font-weight:800; cursor:pointer;">✅ Ja!</button>
+          <button onclick="manualRetry()" style="flex:1; background:#f3f4f6; color:var(--text); border:none; border-radius:14px; padding:14px 10px; font-size:15px; font-weight:700; cursor:pointer;">🔁 Nochmal</button>
+        </div>
+      </div>
+      <div class="fb-bar" id="fb"></div>
+      <button class="next-btn go" id="nxt" onclick="nextQ()" style="display:none">Weiter →</button>
+    `;
+    window.currentSpeakQ = q;
+    answered = false;
+    return;
+  }
+
+  body.innerHTML = `
+    <div class="char-tutor">
+      <span class="tc">🌙</span>
+      <div class="tutor-bubble">${tutorLine}</div>
+    </div>
+    <div class="q-type-lbl">Frage ${cQ+1} von ${total}</div>
+    <div class="q-text">${q.q}</div>
+    ${q.ar ? `
+    <div class="arabic-box">
+      <button class="audio-btn" id="audio-btn-q" onclick="speak(this.dataset.audio, this)" data-audio="${q.audio}" title="Aussprache hören">🔊</button>
+      <div class="arabic-big">${q.ar}</div>
+      <div class="translit translit-hidden" id="translit-reveal">${makeTrChips(q.tr)}</div>
+    </div>` : ''}
+    <div class="opts-grid" id="opts"></div>
+    <div class="fb-bar" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Weiter →</button>
+  `;
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `${opt.i ? `<span class="oi">${opt.i}</span>` : ''}${opt.t}`;
+    btn.onclick = () => checkAns(i, opt.c, q.exp, q);
+    document.getElementById('opts').appendChild(btn);
+  });
+  answered = false;
+}
+
+function renderReviewBanner() {
+  document.getElementById('pbar').style.width = '100%';
+  document.getElementById('hearts').innerHTML = [0,1,2].map(i=>`<span class="hrt">❤️</span>`).join('');
+  const body = document.getElementById('quiz-body');
+  body.className = 'quiz-body fade-in';
+  body.innerHTML = `
+    <div style="text-align:center;padding:30px 10px 20px;">
+      <div style="font-size:64px;margin-bottom:12px;">🌙</div>
+      <div style="font-size:20px;font-weight:900;margin-bottom:8px;color:var(--green)">Nochmal üben!</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:24px;">
+        Du hattest <strong>${reviewQs.length} ${reviewQs.length===1?'Frage':'Fragen'}</strong> falsch.<br>
+        Nuur hilft dir diese nochmal zu üben! 💪
+      </div>
+      <button class="next-btn go" style="display:block;" onclick="renderReviewQ()">Weiter →</button>
+    </div>
+  `;
+}
+
+function renderReviewQ() {
+  if (reviewIdx >= reviewQs.length) { showResult(); return; }
+  const q = reviewQs[reviewIdx];
+  document.getElementById('pbar').style.width = (reviewIdx / reviewQs.length * 100) + '%';
+  document.getElementById('hearts').innerHTML = '🔄'.repeat(reviewQs.length - reviewIdx);
+
+  const body = document.getElementById('quiz-body');
+  body.className = 'quiz-body fade-in';
+  body.innerHTML = `
+    <div class="char-tutor">
+      <span class="tc">🌙</span>
+      <div class="tutor-bubble">Lass uns das nochmal üben – du schaffst das! 💪</div>
+    </div>
+    <div class="q-type-lbl" style="color:var(--gold2)">Wiederholung ${reviewIdx+1} von ${reviewQs.length}</div>
+    <div class="q-text">${q.q}</div>
+    ${q.ar ? `
+    <div class="arabic-box">
+      <button class="audio-btn" id="audio-btn-q" onclick="speak(this.dataset.audio, this)" data-audio="${q.audio}" title="Aussprache hören">🔊</button>
+      <div class="arabic-big">${q.ar}</div>
+      <div class="translit translit-hidden" id="translit-reveal">${makeTrChips(q.tr)}</div>
+    </div>` : ''}
+    <div class="opts-grid" id="opts"></div>
+    <div class="fb-bar" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="nextReview()">Weiter →</button>
+  `;
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `${opt.i ? `<span class="oi">${opt.i}</span>` : ''}${opt.t}`;
+    btn.onclick = () => checkReviewAns(i, opt.c, q.exp);
+    document.getElementById('opts').appendChild(btn);
+  });
+  answered = false;
+}
+
+function checkReviewAns(idx, isOk, exp) {
+  if (answered) return;
+  answered = true;
+  const opts = document.querySelectorAll('.opt-btn');
+  const fb = document.getElementById('fb');
+  const nxt = document.getElementById('nxt');
+  const correctText = reviewQs[reviewIdx].opts.find(o=>o.c).t;
+
+  if (isOk) {
+    opts[idx].classList.add('correct');
+    fb.className = 'fb-bar show ok';
+    fb.innerHTML = `<span class="fb-icon">✅</span><div><div class="fb-title">Jetzt sitzt es! 🎉</div><div class="fb-exp">${exp}</div></div>`;
+    nxt.className = 'next-btn go';
+  } else {
+    opts[idx].classList.add('wrong');
+    opts.forEach(b => { if (b.textContent.trim().includes(correctText.substring(0,10))) b.classList.add('correct'); });
+    fb.className = 'fb-bar show nope';
+    fb.innerHTML = `<span class="fb-icon">💡</span><div><div class="fb-title">Fast! Schau dir die Antwort an.</div><div class="fb-exp">${exp}</div></div>`;
+    nxt.className = 'next-btn retry';
+  }
+  opts.forEach(b => b.disabled = true);
+  nxt.style.display = 'block';
+  const tr = document.getElementById('translit-reveal');
+  if (tr) { tr.classList.remove('translit-hidden'); tr.classList.add('translit-visible'); }
+}
+
+function nextReview() {
+  reviewIdx++;
+  renderReviewQ();
+}
+
+function checkAns(idx, isOk, exp, qObj) {
+  if (answered) return;
+  answered = true;
+  const opts = document.querySelectorAll('.opt-btn');
+  const fb = document.getElementById('fb');
+  const nxt = document.getElementById('nxt');
+
+  if (isOk) {
+    opts[idx].classList.add('correct');
+    cCorrect++;
+    xp += 3;
+    updateStats();
+    fb.className = 'fb-bar show ok';
+    fb.innerHTML = `<span class="fb-icon">✅</span><div><div class="fb-title">Mashallah! Richtig! 🎉</div><div class="fb-exp">${exp}</div></div>`;
+    nxt.className = 'next-btn go';
+  } else {
+    opts[idx].classList.add('wrong');
+    hearts = Math.max(0, hearts - 1);
+    document.getElementById('hearts').innerHTML = [0,1,2].map(i=>`<span class="hrt${i>=hearts?' gone':''}">❤️</span>`).join('');
+    const correctText = cLesson.questions[cQ].opts.find(o=>o.c).t;
+    opts.forEach(b => { if (b.textContent.trim().includes(correctText.trim().substring(0,10))) b.classList.add('correct'); });
+    fb.className = 'fb-bar show nope';
+    fb.innerHTML = `<span class="fb-icon">💡</span><div><div class="fb-title">Nicht ganz – bleib dran!</div><div class="fb-exp">${exp}</div></div>`;
+    nxt.className = 'next-btn retry';
+    // Frage für Wiederholung merken (kein Duplikat)
+    if (qObj && !wrongQs.find(q => q.q === qObj.q)) wrongQs.push(qObj);
+  }
+  opts.forEach(b => b.disabled = true);
+  nxt.style.display = 'block';
+  // Lautschrift erst jetzt einblenden
+  const tr = document.getElementById('translit-reveal');
+  if (tr) { tr.classList.remove('translit-hidden'); tr.classList.add('translit-visible'); }
+}
+
+function nextQ() { cQ++; renderQ(); }
+
+function showResult() {
+  if (!done.includes(currentLessonId)) done.push(currentLessonId);
+  xp += chapters[currentLessonId].xp;
+  updateStats();
+  buildPath();
+  renderBadges();
+
+  const acc = Math.round(cCorrect / cLesson.questions.length * 100);
+  document.getElementById('res-moon').textContent = acc >= 80 ? '🌙' : '💪';
+  document.getElementById('res-sub').textContent = acc >= 80 ? `"${cLesson.title}" gemeistert! 🎉` : `Gut gemacht! Versuche es nochmal für 100%!`;
+  document.getElementById('rv-xp').textContent = '+' + cLesson.xp;
+  document.getElementById('rv-acc').textContent = acc + '%';
+  document.getElementById('rv-str').textContent = streak + '🔥';
+  showScreen('result');
+}
+
+function finishAndHome() { showScreen('home'); }
+function goHome() { showScreen('home'); }
+
+function updateStats() {
+  document.querySelectorAll('#h-streak,#p-streak,#st-streak').forEach(el => el && (el.textContent = streak));
+  document.querySelectorAll('#h-xp,#p-xp,#p-xp2,#st-xp').forEach(el => el && (el.textContent = xp));
+  const stDone = document.getElementById('st-done');
+  if (stDone) stDone.textContent = done.length;
+  const pbar = document.getElementById('p-bar');
+  if (pbar) pbar.style.width = Math.min(100, done.length / chapters.length * 100) + '%';
+
+  const msgs = [
+    ["Assalamu Alaikum! Bereit zu lernen? 🌙", "Jedes Wissen ist ein Licht in deinem Herzen."],
+    ["Masha'Allah! Du machst Fortschritte! 💪", "Weiter so – der Prophet ﷺ liebte das Lernen!"],
+    ["SubhanAllah! Du bist auf dem richtigen Weg! ✨", "Wissen ist die beste Investition."],
+  ];
+  const m = msgs[Math.min(done.length, msgs.length - 1)];
+  const bm = document.getElementById('banner-msg'); if (bm) bm.textContent = m[0];
+  const bs = document.getElementById('banner-sub'); if (bs) bs.textContent = m[1];
+}
+
+function renderBadges() {
+  const grid = document.getElementById('badges-grid');
+  if (!grid) return;
+  const state = { done: done.length, doneIds: done };
+  grid.innerHTML = badges.map(b => {
+    const earned = b.cond(state);
+    return `<div class="badge-tile${earned ? '' : ' dim'}">
+      <div class="be">${b.icon}</div>
+      <div class="bn">${b.name}</div>
+      <div class="bs">${b.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function switchTab(tab, btn) {
+  showScreen(tab);
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function startApp() {
+  showScreen('home');
+  buildPath();
+  renderBadges();
+  updateStats();
+}
+
+updateStats();
+renderBadges();
+</script>
+</body>
+</html>
