@@ -738,49 +738,40 @@ const badges = [
 ];
 
 // ══ AUDIO ══
+const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 function speak(text, btnEl) {
   if (btnEl) { btnEl.classList.add('playing'); btnEl.textContent = '🔉'; }
   const done = () => { if (btnEl) { btnEl.classList.remove('playing'); btnEl.textContent = '🔊'; } };
 
-  // Google TTS Fallback
-  const tryGoogleTTS = () => {
+  try {
+    if (window.speechSynthesis) {
+      const voices = window.speechSynthesis.getVoices();
+      const arVoice = voices.find(v => v.lang && v.lang.startsWith('ar'));
+      // Auf Mobile: speechSynthesis direkt nutzen (eingebaute Stimmen)
+      // Auf Desktop: nur wenn arabische Stimme installiert ist
+      if (isMobileDevice || arVoice) {
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'ar-SA';
+        utter.rate = 0.78;
+        if (arVoice) utter.voice = arVoice;
+        utter.onend = done;
+        utter.onerror = done;
+        window.speechSynthesis.speak(utter);
+        return;
+      }
+    }
+  } catch(e) { /* Fehler ignorieren, Fallback nutzen */ }
+
+  // Fallback: Google TTS (Desktop ohne arabische Stimme)
+  try {
     const url = 'https://translate.google.com/translate_tts?ie=UTF-8&q='
       + encodeURIComponent(text) + '&tl=ar&client=tw-ob&ttsspeed=0.8';
     const audio = new Audio(url);
     audio.onended = done;
     audio.onerror = done;
     audio.play().catch(done);
-  };
-
-  // Primär: speechSynthesis (funktioniert nativ auf iOS + Android)
-  if (window.speechSynthesis) {
-    window.speechSynthesis.cancel();
-    const trySpeak = () => {
-      const voices = window.speechSynthesis.getVoices();
-      const arVoice = voices.find(v => v.lang && v.lang.startsWith('ar'));
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'ar-SA';
-      utter.rate = 0.78;
-      if (arVoice) utter.voice = arVoice;
-      utter.onend = done;
-      utter.onerror = () => tryGoogleTTS();
-      window.speechSynthesis.speak(utter);
-      // iOS-Bug: speechSynthesis friert manchmal ein → Watchdog
-      setTimeout(() => {
-        if (window.speechSynthesis.speaking) window.speechSynthesis.resume();
-      }, 1000);
-    };
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length > 0) {
-      trySpeak();
-    } else {
-      window.speechSynthesis.onvoiceschanged = () => { trySpeak(); };
-      // Timeout falls onvoiceschanged nie feuert
-      setTimeout(() => { if (window.speechSynthesis.getVoices().length === 0) tryGoogleTTS(); }, 2000);
-    }
-  } else {
-    tryGoogleTTS();
-  }
+  } catch(e) { done(); }
 }
 
 // ══ PATH BUILD ══
@@ -944,13 +935,13 @@ function startListening(question) {
   const resultDiv = document.getElementById('recognized-result');
   const manualDiv = document.getElementById('manual-eval');
 
-  // Zuerst die Dua vorlesen
-  speak(question.audio, null);
+  // Dua vorlesen
+  try { speak(question.audio, null); } catch(e) {}
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    // Kein SR verfügbar – nach kurzer Pause manuelle Bewertung
-    setTimeout(() => showManualEval(), 2500);
+  if (!SR || isMobileDevice) {
+    // iOS / kein SR: sofort manuelle Buttons zeigen
+    setTimeout(() => showManualEval(), 1200);
     return;
   }
 
@@ -1278,4 +1269,11 @@ function updateStats() {
     ["Masha'Allah! Du machst Fortschritte! 💪", "Weiter so – der Prophet ﷺ liebte das Lernen!"],
     ["SubhanAllah! Du bist auf dem richtigen Weg! ✨", "Wissen ist die beste Investition."],
   ];
-  const m = m
+  const m = msgs[Math.min(done.length, msgs.length - 1)];
+  const bm = document.getElementById('banner-msg'); if (bm) bm.textContent = m[0];
+  const bs = document.getElementById('banner-sub'); if (bs) bs.textContent = m[1];
+}
+
+function renderBadges() {
+  const grid = document.getElementById('badges-grid');
+  if (!grid) return;
