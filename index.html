@@ -740,38 +740,52 @@ const badges = [
 // ══ AUDIO ══
 const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+function _getBestArabicVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  // Prioritätsliste: beste arabische Stimmen zuerst
+  const preferred = ['Maged','Majed','Google العربية','Google Arabic','Microsoft Naayf','Laila','Amira'];
+  for (const name of preferred) {
+    const v = voices.find(v => v.name && v.name.includes(name));
+    if (v) return v;
+  }
+  return voices.find(v => v.lang && v.lang.startsWith('ar')) || null;
+}
+
+function _doSpeak(text, done) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ar-SA';
+  utter.rate = 0.72;
+  const arVoice = _getBestArabicVoice();
+  if (arVoice) utter.voice = arVoice;
+  utter.onend = done;
+  utter.onerror = done;
+  window.speechSynthesis.speak(utter);
+}
+
 function speak(text, btnEl) {
   if (btnEl) { btnEl.classList.add('playing'); btnEl.textContent = '🔉'; }
   const done = () => { if (btnEl) { btnEl.classList.remove('playing'); btnEl.textContent = '🔊'; } };
 
-  try {
-    if (window.speechSynthesis) {
-      const voices = window.speechSynthesis.getVoices();
-      const arVoice = voices.find(v => v.lang && v.lang.startsWith('ar'));
-      // Auf Mobile: speechSynthesis direkt nutzen (eingebaute Stimmen)
-      // Auf Desktop: nur wenn arabische Stimme installiert ist
-      if (isMobileDevice || arVoice) {
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'ar-SA';
-        utter.rate = 0.78;
-        if (arVoice) utter.voice = arVoice;
-        utter.onend = done;
-        utter.onerror = done;
-        window.speechSynthesis.speak(utter);
-        return;
-      }
-    }
-  } catch(e) { /* Fehler ignorieren, Fallback nutzen */ }
+  if (!window.speechSynthesis) { done(); return; }
 
-  // Fallback: Google TTS (Desktop ohne arabische Stimme)
-  try {
-    const url = 'https://translate.google.com/translate_tts?ie=UTF-8&q='
-      + encodeURIComponent(text) + '&tl=ar&client=tw-ob&ttsspeed=0.8';
-    const audio = new Audio(url);
-    audio.onended = done;
-    audio.onerror = done;
-    audio.play().catch(done);
-  } catch(e) { done(); }
+  // Voices laden – auf iOS/Android erst nach kurzer Verzögerung verfügbar
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    _doSpeak(text, done);
+  } else {
+    let spoken = false;
+    window.speechSynthesis.onvoiceschanged = () => {
+      if (spoken) return; spoken = true;
+      window.speechSynthesis.onvoiceschanged = null;
+      _doSpeak(text, done);
+    };
+    // Fallback: nach 1 Sek trotzdem sprechen (iOS lädt Stimmen asynchron)
+    setTimeout(() => {
+      if (spoken) return; spoken = true;
+      window.speechSynthesis.onvoiceschanged = null;
+      _doSpeak(text, done);
+    }, 1000);
+  }
 }
 
 // ══ PATH BUILD ══
@@ -935,13 +949,11 @@ function startListening(question) {
   const resultDiv = document.getElementById('recognized-result');
   const manualDiv = document.getElementById('manual-eval');
 
-  // Dua vorlesen
-  try { speak(question.audio, null); } catch(e) {}
-
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR || isMobileDevice) {
-    // iOS / kein SR: sofort manuelle Buttons zeigen
-    setTimeout(() => showManualEval(), 1200);
+  if (!SR) {
+    // Kein SR verfügbar (z.B. iOS Safari)
+    if (status) { status.textContent = '⚠️ Mikrofon-Erkennung nicht verfügbar – bewertest du selbst?'; status.className = 'speak-status'; }
+    if (manualDiv) manualDiv.style.display = 'flex';
     return;
   }
 
@@ -949,68 +961,72 @@ function startListening(question) {
   recognitionActive = true;
   recognition = initRecognition();
 
+  // Dua vorlesen, dann Mikrofon starten
   micBtn.classList.add('listening');
   micBtn.innerHTML = '<div class="waves"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>';
-  status.textContent = 'Ich höre zu… sprich jetzt!';
-  status.className = 'speak-status';
+  if (status) { status.textContent = '🎙️ Ich höre zu … sprich jetzt!'; status.className = 'speak-status'; }
   if (manualDiv) manualDiv.style.display = 'none';
+  if (resultDiv) { resultDiv.textContent = ''; resultDiv.style.display = 'none'; }
 
-  // Timeout: nach 10 Sek manuelle Bewertung zeigen
+  // Timeout nach 12 Sek
   speakTimeout = setTimeout(() => {
     if (recognitionActive) {
       try { recognition.stop(); } catch(e) {}
       showManualEval();
     }
-  }, 10000);
+  }, 12000);
+
+  let bestTranscript = '';
 
   recognition.onresult = (e) => {
-    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
-    if (resultDiv) { resultDiv.textContent = '🎤 ' + transcript; resultDiv.style.display = 'block'; }
+    // Alle Ergebnisse sammeln (auch Zwischenergebnisse)
+    const allResults = Array.from(e.results);
+    const interim = allResults.map(r => r[0].transcript).join(' ');
+    bestTranscript = interim;
+    if (resultDiv) {
+      resultDiv.innerHTML = `<span style="color:var(--muted);font-size:12px;">Erkannt:</span> <strong>${interim}</strong>`;
+      resultDiv.style.display = 'block';
+    }
 
-    if (e.results[0].isFinal) {
+    if (allResults[allResults.length - 1].isFinal) {
       clearTimeout(speakTimeout);
       recognitionActive = false;
-      const ok = checkSpeech(transcript, question);
       micBtn.classList.remove('listening');
-      const tr = document.getElementById('translit-reveal');
-      if (tr) { tr.classList.remove('translit-hidden'); tr.classList.add('translit-visible'); }
+
+      const ok = checkSpeech(bestTranscript, question);
 
       if (ok) {
         micBtn.innerHTML = '✅';
         micBtn.classList.add('done');
-        status.textContent = 'Masha Allah! Perfekt! 🎉';
-        status.className = 'speak-status ok';
+        if (status) { status.textContent = 'Masha Allah! Sehr gut! 🎉'; status.className = 'speak-status ok'; }
         cCorrect++; xp += 3; updateStats();
         const fb = document.getElementById('fb');
-        fb.className = 'fb-bar show ok';
-        fb.innerHTML = `<span class="fb-icon">✅</span><div><div class="fb-title">Mashallah! Du hast es gesagt! 🎉</div><div class="fb-exp">${question.exp}</div></div>`;
+        if (fb) { fb.className = 'fb-bar show ok'; fb.innerHTML = `<span class="fb-icon">✅</span><div><div class="fb-title">Mashallah! Gut ausgesprochen! 🎉</div><div class="fb-exp">${question.exp}</div></div>`; }
         const nxt = document.getElementById('nxt');
-        nxt.className = 'next-btn go'; nxt.style.display = 'block';
+        if (nxt) { nxt.style.display = 'block'; }
         answered = true;
       } else {
         micBtn.innerHTML = '🎤';
-        micBtn.classList.remove('listening', 'done');
-        status.textContent = 'Fast! Nochmal versuchen 💪';
-        status.className = 'speak-status err';
+        if (status) { status.textContent = 'Nicht ganz – nochmal versuchen oder selbst bewerten 💪'; status.className = 'speak-status err'; }
         if (manualDiv) manualDiv.style.display = 'flex';
       }
     }
   };
 
-  recognition.onerror = (e) => {
+  recognition.onerror = (ev) => {
     clearTimeout(speakTimeout);
     recognitionActive = false;
     micBtn.classList.remove('listening');
     micBtn.innerHTML = '🎤';
-    // Bei jedem Fehler → manuelle Bewertung
-    showManualEval();
+    const errMsg = ev.error === 'no-speech' ? 'Nichts gehört – nochmal versuchen!' :
+                   ev.error === 'not-allowed' ? '⚠️ Mikrofon-Zugriff verweigert' : 'Fehler – selbst bewerten';
+    if (status) { status.textContent = errMsg; status.className = 'speak-status err'; }
+    if (manualDiv) manualDiv.style.display = 'flex';
   };
 
   recognition.onend = () => { recognitionActive = false; };
 
-  try {
-    recognition.start();
-  } catch(e) {
+  try { recognition.start(); } catch(e) {
     clearTimeout(speakTimeout);
     recognitionActive = false;
     showManualEval();
@@ -1018,13 +1034,36 @@ function startListening(question) {
 }
 
 function checkSpeech(transcript, question) {
-  const t = transcript.trim().toLowerCase().replace(/\s+/g, '');
-  // Arabisch-Matching
+  if (!transcript || !transcript.trim()) return false;
+  const t = transcript.trim().toLowerCase().replace(/\s+/g, ' ');
+
+  // 1. Arabisches Keyword direkt erkannt
   if (question.keyword && transcript.includes(question.keyword)) return true;
-  // Phonetisch Matching (lateinisch falls jemand lateinisch spricht)
-  if (question.keywordSimple && t.includes(question.keywordSimple)) return true;
-  // Längen-Fuzzy: wenn transkript lang genug und ähnlich
-  if (transcript.length >= 3 && question.ar && transcript.length >= question.ar.replace(/\s/g,'').length * 0.4) return true;
+
+  // 2. Lateinisches Keyword erkannt (Transkription)
+  if (question.keywordSimple) {
+    const tClean = t.replace(/\s/g,'');
+    if (tClean.includes(question.keywordSimple)) return true;
+  }
+
+  // 3. Transkription-Match: erkannter Text vs. tr-Feld
+  if (question.tr) {
+    const trClean = question.tr.toLowerCase().replace(/\s+/g,'');
+    const tClean = t.replace(/\s/g,'');
+    // Wenn mindestens 40% der Transkription übereinstimmt
+    let matches = 0;
+    for (let i = 0; i < Math.min(trClean.length, tClean.length); i++) {
+      if (trClean[i] === tClean[i]) matches++;
+    }
+    if (matches / trClean.length >= 0.4) return true;
+  }
+
+  // 4. Längen-Heuristik als letzter Ausweg
+  if (question.ar) {
+    const arLen = question.ar.replace(/\s/g,'').length;
+    if (transcript.trim().length >= Math.max(3, arLen * 0.3)) return true;
+  }
+
   return false;
 }
 
@@ -1056,25 +1095,27 @@ function renderQ() {
   body.className = 'quiz-body fade-in';
 
   if (q.type === 'speak') {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const srAvailable = !!SR;
     body.innerHTML = `
       <div class="char-tutor">
         <span class="tc">🌙</span>
-        <div class="tutor-bubble">Hör zu und sprich laut nach! Tippe auf 🎤 und sprich. 🌙</div>
+        <div class="tutor-bubble">Hör erst zu, dann sprich es nach. Dein Mikrofon wertet aus! 🎤</div>
       </div>
-      <div class="q-type-lbl" style="color:var(--gold2)">🎤 Nachsprechen – Frage ${cQ+1} von ${total}</div>
+      <div class="q-type-lbl" style="color:var(--gold2)">🎤 Aussprache-Test – Frage ${cQ+1} von ${total}</div>
       <div class="q-text">${q.q}</div>
-      <div class="arabic-box">
-        <button class="audio-btn" onclick="speak('${q.audio}', this)" title="Erst anhören">🔊</button>
-        <div class="arabic-big">${q.ar}</div>
-        <div class="translit translit-hidden" id="translit-reveal">${makeTrChips(q.tr)}</div>
+      <div class="arabic-box" style="text-align:center; padding:18px 16px 14px;">
+        <div class="arabic-big" style="font-size:34px; margin-bottom:8px;">${q.ar}</div>
+        <div class="translit" id="translit-reveal" style="margin-bottom:12px;">${makeTrChips(q.tr)}</div>
+        <button class="audio-btn" id="play-btn" onclick="speak('${q.audio}', this)" style="font-size:22px; padding:10px 24px; border-radius:40px; background:var(--green-bg); border:2px solid var(--green3); cursor:pointer;" title="Aussprache anhören">🔊 Anhören</button>
       </div>
-      <div class="speak-area">
-        <button class="mic-btn" id="mic-btn" onclick="startListening(window.currentSpeakQ)">🎤</button>
-        <div class="speak-status" id="speak-status">1. Hör zu 🔊 &nbsp;→&nbsp; 2. Tippe 🎤 &nbsp;→&nbsp; 3. Sprich nach!</div>
-        <div class="recognized-text" id="recognized-result" style="display:none"></div>
+      <div class="speak-area" style="margin-top:8px;">
+        <button class="mic-btn" id="mic-btn" onclick="startListening(window.currentSpeakQ)">${srAvailable ? '🎤' : '🎤'}</button>
+        <div class="speak-status" id="speak-status">${srAvailable ? '1. Zuerst 🔊 anhören &nbsp;→&nbsp; 2. Auf 🎤 tippen &nbsp;→&nbsp; 3. Sprechen' : '⚠️ Mikrofon auf diesem Gerät nicht verfügbar – tippe 🎤 zur manuellen Bewertung'}</div>
+        <div id="recognized-result" style="display:none; margin-top:8px; padding:10px 16px; border-radius:12px; background:#f3f4f6; font-size:15px; text-align:center; width:100%;"></div>
       </div>
       <div id="manual-eval" style="display:none; flex-direction:column; gap:10px; align-items:center; margin-top:12px; width:100%;">
-        <div style="font-size:13px; color:var(--muted); text-align:center;">Hast du die Dua laut nachgesprochen?</div>
+        <div style="font-size:13px; color:var(--muted); text-align:center; font-weight:600;">Hast du es richtig nachgesprochen?</div>
         <div style="display:flex; gap:10px; width:100%;">
           <button onclick="manualSuccess()" style="flex:1; background:var(--green); color:white; border:none; border-radius:14px; padding:14px 10px; font-size:15px; font-weight:800; cursor:pointer;">✅ Ja!</button>
           <button onclick="manualRetry()" style="flex:1; background:#f3f4f6; color:var(--text); border:none; border-radius:14px; padding:14px 10px; font-size:15px; font-weight:700; cursor:pointer;">🔁 Nochmal</button>
@@ -1265,9 +1306,9 @@ function updateStats() {
   if (pbar) pbar.style.width = Math.min(100, done.length / chapters.length * 100) + '%';
 
   const msgs = [
-    ["Assalamu Alaikum! Bereit zu lernen? 🌙", "Jedes Wissen ist ein Licht in deinem Herzen."],
-    ["Masha'Allah! Du machst Fortschritte! 💪", "Weiter so – der Prophet ﷺ liebte das Lernen!"],
-    ["SubhanAllah! Du bist auf dem richtigen Weg! ✨", "Wissen ist die beste Investition."],
+    ["Assalamu Alaikum! Bereit zu lernen? \u{1F319}", "Jedes Wissen ist ein Licht in deinem Herzen."],
+    ["Masha'Allah! Du machst Fortschritte! \u{1F4AA}", "Weiter so \u2013 der Prophet \uFEFF\u{FE0F} liebte das Lernen!"],
+    ["SubhanAllah! Du bist auf dem richtigen Weg! \u2728", "Wissen ist die beste Investition."],
   ];
   const m = msgs[Math.min(done.length, msgs.length - 1)];
   const bm = document.getElementById('banner-msg'); if (bm) bm.textContent = m[0];
