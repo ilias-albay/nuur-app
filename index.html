@@ -1277,3 +1277,37 @@ function updateStats() {
 function renderBadges() {
   const grid = document.getElementById('badges-grid');
   if (!grid) return;
+  const state = { done: done.length, doneIds: done };
+  grid.innerHTML = badges.map(b => {
+    const earned = b.cond(state);
+    return `<div class="badge-tile${earned ? '' : ' dim'}">
+      <div class="be">${b.icon}</div>
+      <div class="bn">${b.name}</div>
+      <div class="bs">${b.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function switchTab(tab, btn) {
+  showScreen(tab);
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function startApp() {
+  showScreen('home');
+  buildPath();
+  renderBadges();
+  updateStats();
+}
+
+updateStats();
+renderBadges();
+</script>
+</body>
+</html>
