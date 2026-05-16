@@ -77,6 +77,8 @@ body {
   letter-spacing:0.5px;
 }
 .splash-btn:active { transform:translateY(5px); border-bottom-width:1px; }
+.splash-skip { background:none; border:none; color:rgba(255,255,255,0.6); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer; padding:10px; margin-top:2px; position:relative; z-index:1; text-decoration:underline; }
+:focus-visible { outline:3px solid var(--gold); outline-offset:2px; border-radius:8px; }
 
 /* ══ HEADER ══ */
 .app-header {
@@ -140,8 +142,6 @@ body {
 @keyframes mascotBounce { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-8px) rotate(3deg);} }
 @keyframes mascotCelebrate { 0%{transform:scale(0.7) rotate(-15deg);} 60%{transform:scale(1.15) rotate(5deg);} 100%{transform:scale(1) rotate(0deg);} }
 .splash-mascot { animation:floatMoon 3s ease-in-out infinite; filter:drop-shadow(0 6px 24px rgba(0,0,0,0.3)); }
-.res-moon { animation:bounceIn .6s cubic-bezier(.34,1.7,.64,1); position:relative; z-index:1; display:flex; justify-content:center; }
-
 .duo-node-row { width:100%; display:flex; justify-content:center; position:relative; }
 .duo-node-row.pos-left  { justify-content:flex-start; padding-left:28px; }
 .duo-node-row.pos-right { justify-content:flex-end; padding-right:28px; }
@@ -161,7 +161,11 @@ body {
 .duo-node.active {
   background: radial-gradient(circle at 35% 28%, #fde68a, var(--gold) 55%, var(--gold2) 100%);
   box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), inset 0 -3px 0 rgba(0,0,0,0.2), 0 6px 0 var(--gold-shadow), 0 10px 24px rgba(251,191,36,0.5);
+}
+.duo-node.active:not(.current) { filter:saturate(0.7) brightness(0.97); opacity:0.85; }
+.duo-node.current {
   animation:nodeBounce 1.8s ease-in-out infinite;
+  outline:4px solid rgba(251,191,36,0.55); outline-offset:5px;
 }
 .duo-node.locked {
   background: radial-gradient(circle at 35% 28%, #f3f4f6, #e5e7eb 60%, #d1d5db 100%);
@@ -227,6 +231,7 @@ body {
   background: linear-gradient(90deg, var(--purple), #a78bfa, var(--pink));
 }
 .hearts-row { display:flex; gap:2px; }
+.q-counter { font-size:12px; font-weight:900; color:var(--muted); white-space:nowrap; }
 .hrt { font-size:18px; transition:all .3s; }
 .hrt.gone { filter:grayscale(1) opacity(.25); transform:scale(0.85); }
 
@@ -433,7 +438,45 @@ body {
 @keyframes starBurst { 0%{opacity:1;transform:translate(0,0) scale(1.2);} 100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0.4);} }
 
 /* ══ QIBLA ══ */
-#qibla .scroll, #quran .scroll { flex:1; overflow-y:auto; padding:18px 18px 100px; background:var(--bg); }
+#qibla .scroll, #quran .scroll, #gebet .scroll, #alif .scroll { flex:1; overflow-y:auto; padding:18px 18px 100px; background:var(--bg); }
+
+/* ══ ARABISCHES ALPHABET ══ */
+.alif-card { width:100%; display:flex; align-items:center; gap:14px; margin-bottom:24px;
+  background:linear-gradient(135deg,#0e7490,#0891b2 55%,#06b6d4); border:none;
+  border-radius:24px; padding:18px 20px; cursor:pointer; text-align:left;
+  box-shadow:0 8px 0 #0e5566, 0 12px 32px rgba(8,145,178,0.35); }
+.alif-card:active { transform:translateY(4px); box-shadow:0 4px 0 #0e5566, 0 6px 18px rgba(8,145,178,0.35); }
+.alif-card-ar { font-size:30px; font-weight:900; color:#fff; direction:rtl; flex-shrink:0; }
+.alif-card-txt { flex:1; }
+.alif-card-txt h3 { font-size:16px; font-weight:900; color:#fff; }
+.alif-card-txt p { font-size:12px; color:rgba(255,255,255,0.85); margin-top:3px; }
+.alif-card-go { font-size:30px; color:#fff; font-weight:900; }
+.alif-back { background:rgba(255,255,255,0.18); border:none; color:#fff; font-size:20px;
+  font-weight:900; width:36px; height:36px; border-radius:12px; cursor:pointer; flex-shrink:0; }
+.alif-hero { text-align:center; background:linear-gradient(135deg,#0e7490,#06b6d4);
+  border-radius:22px; padding:20px 16px; margin-bottom:20px; }
+.alif-hero-ar { font-size:38px; font-weight:900; color:#fff; direction:rtl; letter-spacing:6px; }
+.alif-hero-de { font-size:13px; color:rgba(255,255,255,0.9); margin-top:8px; line-height:1.5; }
+.alif-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px; }
+.alif-cell { background:#fff; border:2px solid #cffafe; border-radius:18px; padding:12px 6px 10px;
+  text-align:center; cursor:pointer; transition:transform .12s, box-shadow .2s;
+  box-shadow:0 3px 12px rgba(0,0,0,0.06); }
+.alif-cell:active { transform:scale(0.95); }
+.alif-cell.play { border-color:#06b6d4; box-shadow:0 0 0 4px rgba(6,182,212,0.18); }
+.alif-cell .ac-char { font-size:34px; font-weight:900; color:#0e7490; direction:rtl; line-height:1; }
+.alif-cell .ac-name { font-size:12px; font-weight:900; color:var(--text); margin-top:6px; }
+.alif-cell .ac-tr { font-size:11px; color:var(--muted); font-weight:700; }
+.alif-cell .ac-sound { font-size:10px; color:#0891b2; font-weight:800; margin-top:3px; }
+.alif-hint, .alif-tip { font-size:13px; color:var(--text); line-height:1.6; background:#fff;
+  border-radius:16px; padding:13px 15px; margin-bottom:16px; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
+.alif-tip { background:rgba(8,145,178,0.08); color:var(--text); margin-top:4px; }
+.harakat-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:20px; }
+.harakat-cell { background:#fff; border:2px solid #cffafe; border-radius:16px; padding:12px 8px;
+  text-align:center; cursor:pointer; box-shadow:0 3px 12px rgba(0,0,0,0.06); }
+.harakat-cell:active { transform:scale(0.96); }
+.harakat-cell .hc-char { font-size:32px; font-weight:900; color:#0e7490; direction:rtl; }
+.harakat-cell .hc-name { font-size:12px; font-weight:900; margin-top:5px; color:var(--text); }
+.harakat-cell .hc-desc { font-size:11px; color:var(--muted); font-weight:700; margin-top:2px; }
 .qibla-hero { display:flex; flex-direction:column; align-items:center; gap:22px; padding:10px 0 20px; }
 .compass-outer {
   width:220px; height:220px; border-radius:50%;
@@ -549,6 +592,15 @@ body {
   cursor:pointer; background:#f3f4f6; color:var(--muted); transition:all .2s; }
 .gmode-btn.active { background:linear-gradient(135deg,var(--purple),var(--purple2)); color:white;
   box-shadow:0 4px 12px rgba(124,58,237,0.35); }
+.prayer-row { display:flex; gap:6px; margin:0 14px 16px; }
+.prayer-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:1px;
+  padding:9px 0 7px; border-radius:14px; border:2px solid #ede9fe; background:white;
+  font-size:18px; cursor:pointer; transition:all .2s; color:var(--muted); }
+.prayer-btn span { font-size:11px; font-weight:900; color:var(--text); }
+.prayer-btn small { font-size:9px; font-weight:800; color:var(--muted); }
+.prayer-btn.active { background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border-color:var(--gold2); box-shadow:0 4px 12px rgba(251,191,36,0.4); }
+.prayer-btn.active span, .prayer-btn.active small { color:#7c2d12; }
 
 .wudu-steps { padding:0 18px 18px; }
 .wudu-step { display:flex; gap:14px; align-items:flex-start; padding:14px; margin-bottom:12px;
@@ -633,6 +685,7 @@ body {
   <div class="splash-ar">نور</div>
   <div class="splash-tag">Entdecke den Islam – spielerisch, schritt für schritt, für jedes Alter.</div>
   <button class="splash-btn" onclick="startApp()">Bismillah – Los geht's ✨</button>
+  <button class="splash-skip" onclick="startApp()" aria-label="Splash überspringen">Überspringen</button>
 </div>
 
 <!-- HOME -->
@@ -652,6 +705,14 @@ body {
         <p id="banner-sub">Heute ist ein guter Tag zum Lernen.</p>
       </div>
     </div>
+    <button class="alif-card" onclick="openAlif()" aria-label="Arabisches Alphabet lernen">
+      <div class="alif-card-ar">أ ب ت</div>
+      <div class="alif-card-txt">
+        <h3>Arabisches Alphabet</h3>
+        <p>28 Buchstaben & Vokalzeichen – mit Aussprache 🔊</p>
+      </div>
+      <div class="alif-card-go">›</div>
+    </button>
     <div class="sec-title">Dein Lernpfad 🗺️</div>
     <div class="duo-path" id="duo-path"></div>
   </div>
@@ -661,6 +722,27 @@ body {
     <button class="bnav-btn" onclick="switchTab('gebet',this)"><span class="ni">🕌</span>Gebet</button>
     <button class="bnav-btn" onclick="switchTab('quran',this)"><span class="ni">📖</span>Quran</button>
     <button class="bnav-btn" onclick="switchTab('profile',this)"><span class="ni">🌙</span>Profil</button>
+  </div>
+</div>
+
+<!-- ARABISCHES ALPHABET -->
+<div id="alif" class="screen">
+  <div class="app-header">
+    <button class="alif-back" onclick="switchTab('home')" aria-label="Zurück">←</button>
+    <div class="hbrand"><span class="hm">🔤</span><span class="hn">Alif<span>-Ba</span></span></div>
+    <div class="hpills"><div class="pill a">📖 28</div></div>
+  </div>
+  <div class="scroll" id="alif-scroll">
+    <div class="alif-hero">
+      <div class="alif-hero-ar">ا ب ت ث</div>
+      <div class="alif-hero-de">Lerne die Buchstaben des Quran – tippe für die Aussprache 🔊</div>
+    </div>
+    <div class="sec-title">Die 28 Buchstaben ✍️</div>
+    <div class="alif-grid" id="alif-grid"></div>
+    <div class="sec-title">Die Vokalzeichen (Harakat) 🎵</div>
+    <div class="alif-hint">Arabisch hat keine „Umlaute" wie a/ä/o. Stattdessen zeigen kleine Zeichen über und unter dem Buchstaben den Vokal. Beispiel mit dem Buchstaben <b>ب</b> (b):</div>
+    <div class="harakat-grid" id="harakat-grid"></div>
+    <div class="alif-tip">💡 Tipp: Arabisch wird von <b>rechts nach links</b> gelesen. Viele Buchstaben verändern leicht ihre Form am Anfang, in der Mitte und am Ende eines Wortes.</div>
   </div>
 </div>
 
@@ -701,8 +783,9 @@ body {
 <!-- QUIZ -->
 <div id="quiz" class="screen">
   <div class="quiz-top">
-    <button class="quit-btn" onclick="goHome()">✕</button>
+    <button class="quit-btn" onclick="goHome()" aria-label="Quiz beenden und zum Lernpfad zurück">✕</button>
     <div class="pbar-wrap"><div class="pbar-fill" id="pbar" style="width:0%"></div></div>
+    <div class="q-counter" id="q-counter" aria-live="polite"></div>
     <div class="hearts-row" id="hearts"></div>
   </div>
   <div class="quiz-body fade-in" id="quiz-body"></div>
@@ -724,7 +807,7 @@ body {
 <!-- OVERLAY -->
 <div class="ov-bg" id="ov-bg">
   <div class="ov-card">
-    <button class="ov-close" onclick="closeOv()">✕</button>
+    <button class="ov-close" onclick="closeOv()" aria-label="Schließen">✕</button>
     <div class="ov-moon" id="ov-moon"></div>
     <div class="ov-title" id="ov-title"></div>
     <div class="ov-desc" id="ov-desc"></div>
@@ -812,7 +895,14 @@ body {
     </div>
     <div class="gebet-mode-row">
       <button class="gmode-btn active" id="gm-wudu" onclick="setGebetMode('wudu')">💧 Wudu</button>
-      <button class="gmode-btn" id="gm-salat" onclick="setGebetMode('salat')">🙏 Fajr-Gebet</button>
+      <button class="gmode-btn" id="gm-salat" onclick="setGebetMode('salat')">🙏 Die 5 Gebete</button>
+    </div>
+    <div class="prayer-row" id="prayer-row" style="display:none">
+      <button class="prayer-btn active" id="pb-fajr" onclick="setGebetPrayer('fajr')">🌅<span>Fajr</span><small>2</small></button>
+      <button class="prayer-btn" id="pb-dhuhr" onclick="setGebetPrayer('dhuhr')">☀️<span>Dhuhr</span><small>4</small></button>
+      <button class="prayer-btn" id="pb-asr" onclick="setGebetPrayer('asr')">🌤️<span>Asr</span><small>4</small></button>
+      <button class="prayer-btn" id="pb-maghrib" onclick="setGebetPrayer('maghrib')">🌇<span>Maghrib</span><small>3</small></button>
+      <button class="prayer-btn" id="pb-isha" onclick="setGebetPrayer('isha')">🌙<span>Isha</span><small>4</small></button>
     </div>
     <div id="gebet-content"></div>
   </div>
@@ -833,13 +923,45 @@ let wrongQs = [];       // falsche Fragen für Wiederholung
 let reviewMode = false; // gerade in Wiederholung?
 let reviewQs = [];      // Kopie der falsch beantworteten
 let reviewIdx = 0;
+let lastActiveDay = null;
+
+// ══ PERSISTENCE ══
+const STORE_KEY = 'nuur_state_v1';
+function dayIdx() { const d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 86400000); }
+function saveState() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify({ xp, done, streak, lastActiveDay, splashSeen: true })); } catch (e) {}
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    xp = s.xp || 0;
+    done = Array.isArray(s.done) ? s.done : [];
+    streak = s.streak || 1;
+    lastActiveDay = (typeof s.lastActiveDay === 'number') ? s.lastActiveDay : null;
+  } catch (e) {}
+}
+function touchStreak() {
+  const t = dayIdx();
+  if (lastActiveDay === t) return;
+  streak = (lastActiveDay !== null && t - lastActiveDay === 1) ? streak + 1 : 1;
+  lastActiveDay = t;
+  saveState();
+}
 
 // ══ SECTIONS ══
 const sections = [
-  { label: "Abschnitt 1: Grundlagen", icon: "🌟", chapterIds: [0,1,2] },
-  { label: "Abschnitt 2: Gebete & Duas", icon: "🤲", chapterIds: [3,4] },
+  { label: "Abschnitt 1: Die Grundlagen", icon: "🌟", chapterIds: [0,1,2] },
+  { label: "Abschnitt 2: Duas & Gebete", icon: "🤲", chapterIds: [3,4] },
   { label: "Abschnitt 3: Die Propheten", icon: "📖", chapterIds: [5,6,7,8,9] },
   { label: "Abschnitt 4: Islam & Leben", icon: "🌙", chapterIds: [10,11,12,13] },
+  { label: "Abschnitt 5: Wer ist Allah?", icon: "✨", chapterIds: [14,15,16,17,18,19,20] },
+  { label: "Abschnitt 6: Die fünf Säulen vertieft", icon: "🕌", chapterIds: [21,22,23,24,25,26] },
+  { label: "Abschnitt 7: Der edle Quran", icon: "📖", chapterIds: [27,28,29,30] },
+  { label: "Abschnitt 8: Mehr Propheten", icon: "🌿", chapterIds: [31,32,33,34,35] },
+  { label: "Abschnitt 9: Leben des Propheten ﷺ", icon: "🌙", chapterIds: [36,37,38,39] },
+  { label: "Abschnitt 10: Schöner Charakter & Alltag", icon: "💛", chapterIds: [40,41,42,43,44,45,46,47,48,49] },
 ];
 
 // ══ CHAPTERS ══
@@ -1192,7 +1314,487 @@ const chapters = [
         opts:[{i:"⚖️",t:"Der Tag der Auferstehung und Abrechnung",c:true},{i:"🌙",t:"Der Beginn des Ramadan",c:false},{i:"🕋",t:"Der Tag des Hadsch",c:false},{i:"🌟",t:"Der Geburtstag des Propheten ﷺ",c:false}],
         exp:"Am Jüngsten Tag werden alle Menschen auferstehen und Rechenschaft ablegen. Dann entscheidet Allah über Paradies und Hölle. ⚖️"}
     ]
-  }
+  },
+
+  // ══ ABSCHNITT 5: WER IST ALLAH? ══
+  { id:14, title:"Wer ist Allah?", icon:"✨", desc:"Lerne deinen Schöpfer kennen – Allah, den Einen.", topics:["Tauhid","Schöpfer","Einzigartig"], xp:20,
+    tutorLines:["Allah ist Einer – ohne Partner, ohne Anfang, ohne Ende. 💛","Niemand ist wie Allah. Er hört und sieht alles!"],
+    questions:[
+      { q:"Wie viele Götter gibt es im Islam?", ar:"لَا إِلَٰهَ إِلَّا اللَّه", tr:"Laa ilaaha illallaah", audio:"لا إله إلا الله",
+        opts:[{i:"☝️",t:"Nur einen – Allah",c:true},{i:"✌️",t:"Zwei",c:false},{i:"🔢",t:"Viele",c:false},{i:"❓",t:"Keinen",c:false}],
+        exp:"Es gibt nur einen Gott: Allah. Das nennt man Tauhid – der Glaube an die Einheit Allahs. ☝️"},
+      { q:"Wer hat den Himmel und die Erde erschaffen?", ar:"الْخَالِق", tr:"al Chaaliq", audio:"الخالق",
+        opts:[{i:"🌍",t:"Allah",c:true},{i:"👤",t:"Die Menschen",c:false},{i:"😇",t:"Die Engel",c:false},{i:"🌟",t:"Sie sind von selbst entstanden",c:false}],
+        exp:"Allah ist Al-Chaaliq – der Schöpfer von allem: den Himmeln, der Erde und uns. 🌍"},
+      { q:"Kann man Allah mit den Augen sehen?", ar:"", tr:"", audio:"",
+        opts:[{i:"🚫",t:"Nein, niemand ist wie Er",c:true},{i:"👁️",t:"Ja, jederzeit",c:false},{i:"🌙",t:"Nur nachts",c:false},{i:"🖼️",t:"Auf Bildern",c:false}],
+        exp:"Niemand ist wie Allah und nichts gleicht Ihm. Wir sehen Ihn nicht, aber Er sieht und hört uns immer. 💛"}
+    ]},
+  { id:15, title:"Die schönen Namen Allahs", icon:"📿", desc:"Allah hat 99 wunderschöne Namen – lerne einige kennen.", topics:["Ar-Rahman","Al-Malik","Asma ul Husna"], xp:20,
+    tutorLines:["Allah hat 99 schöne Namen – jeder zeigt etwas Wunderbares. 📿","Sprich sie liebevoll aus – Allah liebt das!"],
+    questions:[
+      { q:"Wie viele schöne Namen hat Allah?", ar:"أَسْمَاءُ اللَّهِ الْحُسْنَى", tr:"Asmaa ullaahil husnaa", audio:"أسماء الله الحسنى",
+        opts:[{i:"💯",t:"99 Namen",c:true},{i:"🔟",t:"10 Namen",c:false},{i:"5️⃣",t:"5 Namen",c:false},{i:"1️⃣",t:"Nur 1",c:false}],
+        exp:"Allah hat 99 schöne Namen (Asma ul Husna). Wer sie kennt und danach lebt, kommt Allah näher. 📿"},
+      { q:"Was bedeutet 'Ar-Rahman'?", ar:"الرَّحْمَٰن", tr:"ar Rahmaan", audio:"الرحمن",
+        opts:[{i:"💖",t:"Der Allerbarmer",c:true},{i:"⚖️",t:"Der Richter",c:false},{i:"💪",t:"Der Starke",c:false},{i:"📖",t:"Der Wissende",c:false}],
+        exp:"Ar-Rahman bedeutet 'Der Allerbarmer' – Allah ist unendlich barmherzig zu allen Geschöpfen. 💖"},
+      { q:"Was bedeutet 'Al-Ghafur'?", ar:"الْغَفُور", tr:"al Ghafuur", audio:"الغفور",
+        opts:[{i:"🤲",t:"Der Vergebende",c:true},{i:"🌍",t:"Der Schöpfer",c:false},{i:"👑",t:"Der König",c:false},{i:"👂",t:"Der Hörende",c:false}],
+        exp:"Al-Ghafur heißt 'Der Vergebende'. Wenn wir Fehler machen und Allah um Verzeihung bitten, vergibt Er. 🤲"}
+    ]},
+  { id:16, title:"Die Engel Allahs", icon:"😇", desc:"Engel aus Licht, die Allah gehorchen und uns beschützen.", topics:["Dschibril","Schutzengel","Iman"], xp:20,
+    tutorLines:["Engel sind aus Licht erschaffen und gehorchen Allah immer. 😇","Du hast Engel, die deine Taten aufschreiben!"],
+    questions:[
+      { q:"Woraus hat Allah die Engel erschaffen?", ar:"الْمَلَائِكَة", tr:"al Malaaika", audio:"الملائكة",
+        opts:[{i:"💡",t:"Aus Licht",c:true},{i:"🔥",t:"Aus Feuer",c:false},{i:"🪨",t:"Aus Stein",c:false},{i:"🌊",t:"Aus Wasser",c:false}],
+        exp:"Engel sind aus Licht (Nur) erschaffen. Sie essen und schlafen nicht und gehorchen Allah immer. 😇"},
+      { q:"Welcher Engel brachte die Offenbarung zu den Propheten?", ar:"جِبْرِيل", tr:"Dschibriil", audio:"جبريل",
+        opts:[{i:"📜",t:"Dschibril (as)",c:true},{i:"🎺",t:"Israfil (as)",c:false},{i:"💀",t:"Azrail (as)",c:false},{i:"🌧️",t:"Mikail (as)",c:false}],
+        exp:"Der Engel Dschibril (Gabriel) brachte die Worte Allahs zu den Propheten – auch den Quran zu Muhammad ﷺ. 📜"},
+      { q:"Was machen die zwei Engel an deiner Seite?", ar:"", tr:"", audio:"",
+        opts:[{i:"📝",t:"Sie schreiben gute und schlechte Taten auf",c:true},{i:"🍽️",t:"Sie bringen Essen",c:false},{i:"😴",t:"Sie schlafen",c:false},{i:"🎮",t:"Sie spielen",c:false}],
+        exp:"Zwei Engel (Kiraman Katibin) schreiben alles auf, was du tust. Darum versuchen wir, Gutes zu tun! 📝"}
+    ]},
+  { id:17, title:"Die heiligen Bücher", icon:"📚", desc:"Allah sandte Bücher als Rechtleitung für die Menschen.", topics:["Tawrat","Zabur","Indschil","Quran"], xp:20,
+    tutorLines:["Allah ließ die Menschen nie allein – Er sandte Bücher als Licht. 📚","Der Quran ist das letzte und vollkommene Buch!"],
+    questions:[
+      { q:"Welches Buch erhielt Prophet Musa (as)?", ar:"التَّوْرَاة", tr:"at Tawraat", audio:"التوراة",
+        opts:[{i:"📜",t:"Die Tawrat",c:true},{i:"📖",t:"Den Quran",c:false},{i:"🎵",t:"Die Zabur",c:false},{i:"✨",t:"Das Indschil",c:false}],
+        exp:"Musa (as) erhielt die Tawrat. Allah sandte mehrere Bücher, aber der Quran ist das letzte. 📜"},
+      { q:"Welches Buch erhielt Prophet Muhammad ﷺ?", ar:"الْقُرْآن", tr:"al Quraan", audio:"القرآن",
+        opts:[{i:"📖",t:"Den Quran",c:true},{i:"📜",t:"Die Tawrat",c:false},{i:"🎵",t:"Die Zabur",c:false},{i:"✨",t:"Das Indschil",c:false}],
+        exp:"Muhammad ﷺ erhielt den Quran – das letzte Buch Allahs, das bis heute unverändert ist. 📖"},
+      { q:"Welches Buch lesen Muslime heute?", ar:"", tr:"", audio:"",
+        opts:[{i:"📖",t:"Den Quran",c:true},{i:"📰",t:"Eine Zeitung",c:false},{i:"📓",t:"Ein Tagebuch",c:false},{i:"📚",t:"Die Zabur",c:false}],
+        exp:"Heute folgen Muslime dem Quran. Allah hat versprochen, ihn für immer zu bewahren. 📖"}
+    ]},
+  { id:18, title:"Der Jüngste Tag", icon:"⚖️", desc:"Eines Tages endet diese Welt – dann zählt jede gute Tat.", topics:["Achira","Abrechnung","Gerechtigkeit"], xp:20,
+    tutorLines:["Nichts geht verloren – jede gute Tat wird belohnt. ⚖️","Der Jüngste Tag macht uns achtsam und gut."],
+    questions:[
+      { q:"Was ist der Jüngste Tag?", ar:"يَوْمُ الْقِيَامَة", tr:"Jawm ul Qijaamah", audio:"يوم القيامة",
+        opts:[{i:"⚖️",t:"Der Tag der Auferstehung und Abrechnung",c:true},{i:"🎂",t:"Ein Geburtstag",c:false},{i:"🌙",t:"Der Ramadan",c:false},{i:"🎉",t:"Ein Fest",c:false}],
+        exp:"Am Jüngsten Tag werden alle auferweckt und Allah fragt nach unseren Taten. Er ist immer gerecht. ⚖️"},
+      { q:"Was passiert mit guten Taten?", ar:"", tr:"", audio:"",
+        opts:[{i:"💖",t:"Allah belohnt sie",c:true},{i:"🗑️",t:"Sie sind unwichtig",c:false},{i:"❓",t:"Niemand weiß es",c:false},{i:"⏳",t:"Sie verschwinden",c:false}],
+        exp:"Jede gute Tat – sogar ein Lächeln – wird von Allah gesehen und belohnt. Nichts geht verloren! 💖"},
+      { q:"Warum denken Muslime an den Jüngsten Tag?", ar:"", tr:"", audio:"",
+        opts:[{i:"🌟",t:"Damit sie Gutes tun und Schlechtes meiden",c:true},{i:"😨",t:"Um Angst zu haben",c:false},{i:"😴",t:"Um nichts zu tun",c:false},{i:"🤷",t:"Aus Langeweile",c:false}],
+        exp:"Der Gedanke an den Jüngsten Tag hilft uns, ehrlich, freundlich und fleißig im Guten zu sein. 🌟"}
+    ]},
+  { id:19, title:"Das Paradies – Jannah", icon:"🌴", desc:"Der wunderschöne Lohn für gläubige, gute Menschen.", topics:["Jannah","Belohnung","Hoffnung"], xp:20,
+    tutorLines:["Das Paradies ist schöner als alles, was wir uns vorstellen können. 🌴","Gute Taten sind der Weg dorthin – inschaAllah!"],
+    questions:[
+      { q:"Was ist die Jannah?", ar:"الْجَنَّة", tr:"al Dschannah", audio:"الجنة",
+        opts:[{i:"🌴",t:"Das Paradies",c:true},{i:"🏫",t:"Eine Schule",c:false},{i:"🏞️",t:"Ein Park",c:false},{i:"🌊",t:"Ein Meer",c:false}],
+        exp:"Die Jannah ist das Paradies – ein Ort voller Freude, Frieden und Schönheit, für immer. 🌴"},
+      { q:"Wie kommt man inschaAllah ins Paradies?", ar:"", tr:"", audio:"",
+        opts:[{i:"💛",t:"Durch Glauben an Allah und gute Taten",c:true},{i:"💰",t:"Mit viel Geld",c:false},{i:"🏆",t:"Durch Sport",c:false},{i:"🎮",t:"Durch Spielen",c:false}],
+        exp:"Wer an Allah glaubt, betet und gut zu anderen ist, hofft auf das Paradies – mit Allahs Barmherzigkeit. 💛"},
+      { q:"Wie lange bleibt man im Paradies?", ar:"", tr:"", audio:"",
+        opts:[{i:"♾️",t:"Für immer",c:true},{i:"📅",t:"Eine Woche",c:false},{i:"⏰",t:"Eine Stunde",c:false},{i:"🌙",t:"Eine Nacht",c:false}],
+        exp:"Im Paradies bleibt man für immer – ohne Krankheit, ohne Traurigkeit, ohne Ende. ♾️"}
+    ]},
+  { id:20, title:"Vertrauen auf Allah – Qadar", icon:"⚡", desc:"Alles geschieht mit Allahs Wissen – wir vertrauen Ihm.", topics:["Qadar","Tawakkul","Geduld"], xp:20,
+    tutorLines:["Allah weiß alles und plant alles weise. Wir vertrauen Ihm. ⚡","Tu dein Bestes – und überlasse das Ergebnis Allah!"],
+    questions:[
+      { q:"Was bedeutet Qadar?", ar:"الْقَدَر", tr:"al Qadar", audio:"القدر",
+        opts:[{i:"⚡",t:"Allahs weise Bestimmung",c:true},{i:"📖",t:"Ein Buch",c:false},{i:"😇",t:"Ein Engel",c:false},{i:"🕋",t:"Eine Reise",c:false}],
+        exp:"Qadar heißt: Allah weiß und bestimmt alles weise. Gutes wie Schweres – alles hat einen Sinn. ⚡"},
+      { q:"Was tun wir, wenn etwas Schweres passiert?", ar:"إِنَّا لِلَّهِ", tr:"Innaa lillaah", audio:"إنا لله",
+        opts:[{i:"🤲",t:"Geduldig sein und Allah vertrauen",c:true},{i:"😡",t:"Wütend werden",c:false},{i:"😭",t:"Aufgeben",c:false},{i:"🙈",t:"Weglaufen",c:false}],
+        exp:"Bei Schwerem sagen wir 'Innaa lillaah' und bleiben geduldig – Allah belohnt Sabr (Geduld). 🤲"},
+      { q:"Was heißt Tawakkul?", ar:"تَوَكُّل", tr:"Tawakkul", audio:"توكل",
+        opts:[{i:"💪",t:"Sein Bestes tun und auf Allah vertrauen",c:true},{i:"😴",t:"Gar nichts tun",c:false},{i:"💸",t:"Geld sparen",c:false},{i:"🏃",t:"Schnell rennen",c:false}],
+        exp:"Tawakkul bedeutet: Wir geben unser Bestes und vertrauen das Ergebnis Allah an. 💪"}
+    ]},
+
+  // ══ ABSCHNITT 6: DIE FÜNF SÄULEN VERTIEFT ══
+  { id:21, title:"Die Schahada verstehen", icon:"🗣️", desc:"Das Glaubensbekenntnis – das Tor zum Islam.", topics:["Schahada","Tauhid","Risala"], xp:20,
+    tutorLines:["Die Schahada ist die erste und wichtigste Säule. 🗣️","Sie kommt aus dem Herzen und wird mit der Zunge gesprochen!"],
+    questions:[
+      { q:"Wie lautet der Anfang der Schahada?", ar:"أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّه", tr:"Aschhadu an laa ilaaha illallaah", audio:"أشهد أن لا إله إلا الله",
+        opts:[{i:"☝️",t:"Ich bezeuge: kein Gott außer Allah",c:true},{i:"🙏",t:"Ich bete fünfmal",c:false},{i:"🌙",t:"Ich faste",c:false},{i:"💰",t:"Ich gebe Zakat",c:false}],
+        exp:"Die Schahada beginnt: 'Aschhadu an laa ilaaha illallaah' – kein Gott außer Allah. ☝️"},
+      { q:"Wer ist der Gesandte Allahs in der Schahada?", ar:"مُحَمَّدٌ رَسُولُ اللَّه", tr:"Muhammadun rasuulullaah", audio:"محمد رسول الله",
+        opts:[{i:"🌙",t:"Muhammad ﷺ",c:true},{i:"⚖️",t:"Musa (as)",c:false},{i:"🔥",t:"Ibrahim (as)",c:false},{i:"✨",t:"Isa (as)",c:false}],
+        exp:"Der zweite Teil: 'Muhammadun rasuulullaah' – Muhammad ﷺ ist der Gesandte Allahs. 🌙"},
+      { q:"Wo muss die Schahada zuerst sein?", ar:"", tr:"", audio:"",
+        opts:[{i:"💖",t:"Im Herzen – und dann auf der Zunge",c:true},{i:"📒",t:"Nur auf Papier",c:false},{i:"📱",t:"Auf dem Handy",c:false},{i:"🧱",t:"An der Wand",c:false}],
+        exp:"Man glaubt die Schahada im Herzen und spricht sie ehrlich aus. So wird man Muslim. 💖"}
+    ]},
+  { id:22, title:"Das Gebet – Salat", icon:"🙏", desc:"Warum das Gebet das Herz des Glaubens ist.", topics:["Salat","5 mal","Verbindung"], xp:20,
+    tutorLines:["Das Gebet ist wie ein Gespräch mit Allah – fünfmal am Tag. 🙏","Es gibt dem Tag Halt und dem Herzen Ruhe!"],
+    questions:[
+      { q:"Wie oft beten Muslime am Tag?", ar:"الصَّلَاة", tr:"as Salaah", audio:"الصلاة",
+        opts:[{i:"5️⃣",t:"5 Mal",c:true},{i:"3️⃣",t:"3 Mal",c:false},{i:"1️⃣",t:"1 Mal",c:false},{i:"🔟",t:"10 Mal",c:false}],
+        exp:"Muslime beten 5 Mal täglich: Fajr, Dhuhr, Asr, Maghrib und Isha. 🙏"},
+      { q:"Wohin wenden wir uns beim Gebet?", ar:"الْقِبْلَة", tr:"al Qibla", audio:"القبلة",
+        opts:[{i:"🕋",t:"Zur Kaaba in Mekka",c:true},{i:"🌅",t:"Zum Sonnenaufgang",c:false},{i:"⬆️",t:"Nach oben",c:false},{i:"🏠",t:"Nach Hause",c:false}],
+        exp:"Beim Gebet wenden wir uns zur Qibla – der Richtung der Kaaba in Mekka. 🕋"},
+      { q:"Was muss man vor dem Gebet tun?", ar:"الْوُضُوء", tr:"al Wuduu", audio:"الوضوء",
+        opts:[{i:"💧",t:"Wudu machen (sich rein waschen)",c:true},{i:"🍫",t:"Süßes essen",c:false},{i:"📺",t:"Fernsehen",c:false},{i:"🏃",t:"Rennen",c:false}],
+        exp:"Vor dem Gebet macht man Wudu – die rituelle Waschung – um rein zu sein. 💧"}
+    ]},
+  { id:23, title:"Wudu – Die Reinheit", icon:"💧", desc:"Sauber und bereit für das Gespräch mit Allah.", topics:["Wudu","Reinheit","Schritte"], xp:20,
+    tutorLines:["Wudu reinigt Körper und Herz – ein schönes Gefühl! 💧","Tipp: Probier die Wudu-Funktion in der App aus!"],
+    questions:[
+      { q:"Womit beginnt das Wudu?", ar:"بِسْمِ اللَّه", tr:"Bismillah", audio:"بسم الله",
+        opts:[{i:"🤲",t:"Mit 'Bismillah' und der Absicht",c:true},{i:"🦶",t:"Mit den Füßen",c:false},{i:"👂",t:"Mit den Ohren",c:false},{i:"🍽️",t:"Mit dem Essen",c:false}],
+        exp:"Man beginnt Wudu mit der Absicht im Herzen und spricht 'Bismillah'. 🤲"},
+      { q:"Welcher Körperteil wird beim Wudu gewaschen?", ar:"", tr:"", audio:"",
+        opts:[{i:"😊",t:"Gesicht, Arme, Kopf und Füße",c:true},{i:"👕",t:"Nur die Kleidung",c:false},{i:"👀",t:"Nur die Augen",c:false},{i:"🦷",t:"Nur die Zähne",c:false}],
+        exp:"Beim Wudu wäscht man Hände, Mund, Nase, Gesicht, Arme, Kopf und Füße – meist dreimal. 😊"},
+      { q:"Was macht das Wudu kaputt?", ar:"", tr:"", audio:"",
+        opts:[{i:"🚽",t:"Zur Toilette gehen",c:true},{i:"📖",t:"Quran lesen",c:false},{i:"🙏",t:"Beten",c:false},{i:"😴",t:"Kurz blinzeln",c:false}],
+        exp:"Z.B. der Toilettengang macht Wudu ungültig – dann wäscht man sich vor dem Gebet erneut. 🚽"}
+    ]},
+  { id:24, title:"Zakat – Teilen & Geben", icon:"💰", desc:"Vom Vermögen abgeben macht das Herz rein.", topics:["Zakat","Sadaqa","Hilfe"], xp:20,
+    tutorLines:["Geben macht glücklich – und reinigt das Vermögen. 💰","Auch ein kleines Geschenk an Bedürftige zählt!"],
+    questions:[
+      { q:"Was ist Zakat?", ar:"الزَّكَاة", tr:"az Zakaah", audio:"الزكاة",
+        opts:[{i:"💰",t:"Eine Pflichtabgabe für Bedürftige",c:true},{i:"🎂",t:"Ein Kuchen",c:false},{i:"📖",t:"Ein Gebet",c:false},{i:"🕋",t:"Eine Reise",c:false}],
+        exp:"Zakat ist die Pflichtabgabe – ein kleiner Teil des Vermögens (2,5%) für Arme. 💰"},
+      { q:"Was bewirkt das Geben?", ar:"", tr:"", audio:"",
+        opts:[{i:"💖",t:"Es reinigt Herz und Vermögen",c:true},{i:"😢",t:"Es macht traurig",c:false},{i:"🗑️",t:"Es ist verschwendet",c:false},{i:"😴",t:"Nichts",c:false}],
+        exp:"Zakat reinigt das Herz von Geiz und hilft den Armen – eine schöne Säule des Islam. 💖"},
+      { q:"Wie nennt man freiwilliges Spenden?", ar:"صَدَقَة", tr:"Sadaqah", audio:"صدقة",
+        opts:[{i:"🤲",t:"Sadaqa",c:true},{i:"🙏",t:"Salat",c:false},{i:"🌙",t:"Saum",c:false},{i:"🕋",t:"Hadsch",c:false}],
+        exp:"Sadaqa ist freiwilliges Spenden – sogar ein Lächeln ist Sadaqa! 🤲"}
+    ]},
+  { id:25, title:"Saum – Das Fasten", icon:"🌙", desc:"Im Ramadan fasten Muslime für Allah.", topics:["Saum","Ramadan","Selbstkontrolle"], xp:20,
+    tutorLines:["Fasten lehrt Geduld, Dankbarkeit und Mitgefühl. 🌙","Kinder fasten erst, wenn sie groß und bereit sind!"],
+    questions:[
+      { q:"In welchem Monat fasten Muslime?", ar:"رَمَضَان", tr:"Ramadaan", audio:"رمضان",
+        opts:[{i:"🌙",t:"Im Ramadan",c:true},{i:"☀️",t:"Im Sommer",c:false},{i:"❄️",t:"Im Winter",c:false},{i:"🎄",t:"Im Dezember",c:false}],
+        exp:"Im heiligen Monat Ramadan fasten Muslime von Morgendämmerung bis Sonnenuntergang. 🌙"},
+      { q:"Was bedeutet Fasten?", ar:"الصَّوْم", tr:"as Sawm", audio:"الصوم",
+        opts:[{i:"🚫",t:"Nicht essen und trinken am Tag",c:true},{i:"🍔",t:"Mehr essen",c:false},{i:"😴",t:"Den ganzen Tag schlafen",c:false},{i:"🏃",t:"Viel rennen",c:false}],
+        exp:"Fasten heißt: tagsüber nicht essen und trinken und gut sein – für Allah. 🚫"},
+      { q:"Womit bricht man das Fasten am Abend?", ar:"إِفْطَار", tr:"Iftaar", audio:"إفطار",
+        opts:[{i:"🌴",t:"Mit dem Iftar – oft Dattel und Wasser",c:true},{i:"🍰",t:"Mit Kuchen am Morgen",c:false},{i:"☕",t:"Mit Kaffee am Mittag",c:false},{i:"🍬",t:"Gar nicht",c:false}],
+        exp:"Beim Sonnenuntergang bricht man das Fasten (Iftar) – traditionell mit Datteln und Wasser. 🌴"}
+    ]},
+  { id:26, title:"Hadsch – Die Pilgerfahrt", icon:"🕋", desc:"Die große Reise nach Mekka zur Kaaba.", topics:["Hadsch","Kaaba","Mekka"], xp:20,
+    tutorLines:["Millionen Muslime reisen nach Mekka – alle gleich gekleidet. 🕋","Hadsch zeigt: Vor Allah sind alle Menschen gleich!"],
+    questions:[
+      { q:"Wohin reist man beim Hadsch?", ar:"مَكَّة", tr:"Makkah", audio:"مكة",
+        opts:[{i:"🕋",t:"Nach Mekka",c:true},{i:"🗼",t:"Nach Paris",c:false},{i:"🏝️",t:"Auf eine Insel",c:false},{i:"🏔️",t:"Auf einen Berg",c:false}],
+        exp:"Der Hadsch ist die Pilgerfahrt nach Mekka, zur heiligen Kaaba. 🕋"},
+      { q:"Wie oft im Leben ist Hadsch Pflicht?", ar:"", tr:"", audio:"",
+        opts:[{i:"1️⃣",t:"Einmal – wenn man kann",c:true},{i:"📅",t:"Jedes Jahr",c:false},{i:"🔁",t:"Jeden Monat",c:false},{i:"🚫",t:"Nie",c:false}],
+        exp:"Hadsch ist einmal im Leben Pflicht – für jeden Muslim, der gesund ist und es sich leisten kann. 1️⃣"},
+      { q:"Was ist die Kaaba?", ar:"الْكَعْبَة", tr:"al Kaaba", audio:"الكعبة",
+        opts:[{i:"🕋",t:"Das erste Haus für die Anbetung Allahs",c:true},{i:"🏰",t:"Ein Schloss",c:false},{i:"🏬",t:"Ein Kaufhaus",c:false},{i:"🏟️",t:"Ein Stadion",c:false}],
+        exp:"Die Kaaba in Mekka ist das erste Haus, das für die Anbetung Allahs gebaut wurde – von Ibrahim (as). 🕋"}
+    ]},
+
+  // ══ ABSCHNITT 7: DER EDLE QURAN ══
+  { id:27, title:"Der edle Quran", icon:"📖", desc:"Das Wort Allahs – Licht und Rechtleitung.", topics:["Quran","Suren","Offenbarung"], xp:20,
+    tutorLines:["Der Quran ist Allahs Wort – jeder Buchstabe bringt Belohnung. 📖","Mit sauberen Händen und Liebe lesen wir ihn!"],
+    questions:[
+      { q:"Wer ist der Autor des Quran?", ar:"كَلَامُ اللَّه", tr:"Kalaamullaah", audio:"كلام الله",
+        opts:[{i:"🌟",t:"Es ist das Wort Allahs",c:true},{i:"✍️",t:"Ein Schriftsteller",c:false},{i:"😇",t:"Ein Engel",c:false},{i:"👤",t:"Der Prophet ﷺ selbst",c:false}],
+        exp:"Der Quran ist Kalaamullaah – das Wort Allahs, offenbart durch Dschibril an Muhammad ﷺ. 🌟"},
+      { q:"Wie nennt man die Kapitel des Quran?", ar:"سُورَة", tr:"Suura", audio:"سورة",
+        opts:[{i:"📑",t:"Suren",c:true},{i:"📃",t:"Seiten",c:false},{i:"🎵",t:"Lieder",c:false},{i:"📚",t:"Bücher",c:false}],
+        exp:"Der Quran hat 114 Suren (Kapitel). Jeder Vers heißt Aya. 📑"},
+      { q:"Womit beginnen fast alle Suren?", ar:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيم", tr:"Bismillaahir rahmaanir rahiim", audio:"بسم الله الرحمن الرحيم",
+        opts:[{i:"💖",t:"Mit der Basmala",c:true},{i:"🔢",t:"Mit Zahlen",c:false},{i:"🎶",t:"Mit Musik",c:false},{i:"📅",t:"Mit einem Datum",c:false}],
+        exp:"Fast jede Sure beginnt mit der Basmala: 'Im Namen Allahs, des Allerbarmers, des Barmherzigen'. 💖"}
+    ]},
+  { id:28, title:"Sure Al-Fatiha", icon:"🌟", desc:"Die wichtigste Sure – das Herz des Gebets.", topics:["Al-Fatiha","Gebet","7 Verse"], xp:20,
+    tutorLines:["Al-Fatiha sprechen wir in jedem Gebet. 🌟","Sie ist ein Bittgebet um den geraden Weg!"],
+    questions:[
+      { q:"Was bedeutet 'Al-Fatiha'?", ar:"الْفَاتِحَة", tr:"al Faatiha", audio:"الفاتحة",
+        opts:[{i:"🚪",t:"Die Eröffnung",c:true},{i:"🌙",t:"Der Mond",c:false},{i:"🐝",t:"Die Biene",c:false},{i:"🌊",t:"Das Meer",c:false}],
+        exp:"Al-Fatiha heißt 'Die Eröffnung' – sie eröffnet den Quran und jedes Gebet. 🚪"},
+      { q:"Wie viele Verse hat Al-Fatiha?", ar:"", tr:"", audio:"",
+        opts:[{i:"7️⃣",t:"7 Verse",c:true},{i:"3️⃣",t:"3 Verse",c:false},{i:"🔟",t:"10 Verse",c:false},{i:"💯",t:"100 Verse",c:false}],
+        exp:"Al-Fatiha hat 7 Verse. Sie wird in jeder Gebetseinheit (Rakaa) rezitiert. 7️⃣"},
+      { q:"Worum bitten wir in Al-Fatiha?", ar:"اهْدِنَا الصِّرَاطَ الْمُسْتَقِيم", tr:"Ihdinas siraatal mustaqiim", audio:"اهدنا الصراط المستقيم",
+        opts:[{i:"🛤️",t:"Um den geraden Weg",c:true},{i:"💰",t:"Um viel Geld",c:false},{i:"🍭",t:"Um Süßigkeiten",c:false},{i:"🏆",t:"Um Pokale",c:false}],
+        exp:"Wir bitten Allah: 'Führe uns den geraden Weg' – den Weg der Guten. 🛤️"}
+    ]},
+  { id:29, title:"Sure Al-Ikhlas", icon:"☝️", desc:"Eine kurze Sure über die Einheit Allahs.", topics:["Al-Ikhlas","Tauhid","Kurze Sure"], xp:20,
+    tutorLines:["Al-Ikhlas ist kurz, aber so wertvoll wie ein Drittel des Quran! ☝️","Sie beschreibt, wer Allah ist."],
+    questions:[
+      { q:"Womit beginnt Sure Al-Ikhlas?", ar:"قُلْ هُوَ اللَّهُ أَحَد", tr:"Qul huwallaahu ahad", audio:"قل هو الله أحد",
+        opts:[{i:"☝️",t:"Sag: Er ist Allah, ein Einziger",c:true},{i:"🌙",t:"Beim Mond",c:false},{i:"📖",t:"Lies im Namen",c:false},{i:"🌅",t:"Beim Morgen",c:false}],
+        exp:"Al-Ikhlas beginnt: 'Qul huwallaahu ahad' – Sag: Er ist Allah, ein Einziger. ☝️"},
+      { q:"Worüber spricht Al-Ikhlas?", ar:"", tr:"", audio:"",
+        opts:[{i:"💛",t:"Dass Allah Einer ist und niemand wie Er",c:true},{i:"🐪",t:"Über Tiere",c:false},{i:"🍇",t:"Über Essen",c:false},{i:"⚔️",t:"Über Kämpfe",c:false}],
+        exp:"Al-Ikhlas erklärt: Allah ist Einer, unabhängig, hat keine Kinder und nichts gleicht Ihm. 💛"},
+      { q:"Wie wertvoll ist Al-Ikhlas laut dem Propheten ﷺ?", ar:"", tr:"", audio:"",
+        opts:[{i:"📖",t:"Wie ein Drittel des Quran",c:true},{i:"🪙",t:"Wie eine Münze",c:false},{i:"🍬",t:"Wie ein Bonbon",c:false},{i:"❌",t:"Unwichtig",c:false}],
+        exp:"Der Prophet ﷺ sagte, Al-Ikhlas zu lesen ist wie ein Drittel des Quran zu lesen. 📖"}
+    ]},
+  { id:30, title:"Al-Falaq & An-Nas", icon:"🛡️", desc:"Die zwei Schutz-Suren gegen das Böse.", topics:["Schutz","Muawwidhatayn","Dua"], xp:20,
+    tutorLines:["Diese zwei Suren sind wie ein Schild – wir lesen sie zum Schutz. 🛡️","Besonders abends vor dem Schlafen!"],
+    questions:[
+      { q:"Wovor sucht man Schutz in diesen Suren?", ar:"أَعُوذُ بِرَبِّ الْفَلَق", tr:"Auudhu bi rabbil falaq", audio:"أعوذ برب الفلق",
+        opts:[{i:"🛡️",t:"Vor allem Bösen – bei Allah",c:true},{i:"🌧️",t:"Vor Regen",c:false},{i:"🐶",t:"Vor Hunden",c:false},{i:"📚",t:"Vor Hausaufgaben",c:false}],
+        exp:"In Al-Falaq und An-Nas suchen wir Schutz bei Allah, dem Herrn, vor allem Bösen. 🛡️"},
+      { q:"Wie nennt man diese zwei Suren zusammen?", ar:"الْمُعَوِّذَتَان", tr:"al Muawwidhataan", audio:"المعوذتان",
+        opts:[{i:"🛡️",t:"Die Muawwidhatayn (Schutzsuren)",c:true},{i:"🎵",t:"Die Liedersuren",c:false},{i:"📜",t:"Die langen Suren",c:false},{i:"🔢",t:"Die Zahlensuren",c:false}],
+        exp:"Al-Falaq und An-Nas heißen zusammen Al-Muawwidhatayn – die zwei Schutzsuren. 🛡️"},
+      { q:"Wann liest man sie gerne?", ar:"", tr:"", audio:"",
+        opts:[{i:"🌙",t:"Morgens, abends und vor dem Schlafen",c:true},{i:"🏃",t:"Nur beim Sport",c:false},{i:"🍽️",t:"Nur beim Essen",c:false},{i:"📺",t:"Nur beim Fernsehen",c:false}],
+        exp:"Man liest sie gern morgens, abends und vor dem Schlafen – für Allahs Schutz. 🌙"}
+    ]},
+
+  // ══ ABSCHNITT 8: MEHR PROPHETEN ══
+  { id:31, title:"Prophet Yusuf (as)", icon:"👑", desc:"Geduld und Vergebung trotz schwerer Prüfungen.", topics:["Yusuf","Geduld","Vergebung"], xp:20,
+    tutorLines:["Yusuf (as) blieb gut, auch als andere ihm wehtaten. 👑","Am Ende belohnte Allah seine Geduld!"],
+    questions:[
+      { q:"Was taten Yusufs Brüder aus Eifersucht?", ar:"يُوسُف", tr:"Yuusuf", audio:"يوسف",
+        opts:[{i:"🕳️",t:"Sie warfen ihn in einen Brunnen",c:true},{i:"🎁",t:"Sie schenkten ihm Gold",c:false},{i:"🏠",t:"Sie bauten ihm ein Haus",c:false},{i:"🍰",t:"Sie buken ihm Kuchen",c:false}],
+        exp:"Yusufs Brüder waren eifersüchtig und warfen ihn in einen Brunnen. Doch Allah beschützte ihn. 🕳️"},
+      { q:"Was wurde Yusuf (as) später in Ägypten?", ar:"", tr:"", audio:"",
+        opts:[{i:"👑",t:"Ein mächtiger Minister",c:true},{i:"🧹",t:"Ein Diener für immer",c:false},{i:"🐑",t:"Ein Hirte",c:false},{i:"🎨",t:"Ein Maler",c:false}],
+        exp:"Allah erhöhte Yusuf (as) – er wurde ein weiser Minister in Ägypten. 👑"},
+      { q:"Wie reagierte Yusuf (as) auf seine Brüder am Ende?", ar:"", tr:"", audio:"",
+        opts:[{i:"🤝",t:"Er vergab ihnen",c:true},{i:"😡",t:"Er bestrafte sie hart",c:false},{i:"🙈",t:"Er ignorierte sie",c:false},{i:"🏃",t:"Er rannte weg",c:false}],
+        exp:"Yusuf (as) vergab seinen Brüdern. Vergebung ist eine wunderschöne Eigenschaft. 🤝"}
+    ]},
+  { id:32, title:"Prophet Yunus (as)", icon:"🐋", desc:"Im Bauch des Wals rief er Allah um Hilfe.", topics:["Yunus","Dua","Reue"], xp:20,
+    tutorLines:["Yunus (as) lernte: Allah hört uns überall – sogar im Wal! 🐋","Sein Bittgebet ist sehr berühmt."],
+    questions:[
+      { q:"Wo befand sich Yunus (as)?", ar:"يُونُس", tr:"Yuunus", audio:"يونس",
+        opts:[{i:"🐋",t:"Im Bauch eines großen Fisches",c:true},{i:"🏰",t:"In einem Schloss",c:false},{i:"🌋",t:"In einem Vulkan",c:false},{i:"🌲",t:"In einem Wald",c:false}],
+        exp:"Yunus (as) wurde von einem großen Fisch verschluckt – und rief Allah aus der Dunkelheit. 🐋"},
+      { q:"Was tat Yunus (as) im Fisch?", ar:"لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ", tr:"Laa ilaaha illaa anta subhaanak", audio:"لا إله إلا أنت سبحانك",
+        opts:[{i:"🤲",t:"Er machte Dua und bereute",c:true},{i:"😴",t:"Er schlief nur",c:false},{i:"😡",t:"Er wurde wütend",c:false},{i:"🎵",t:"Er sang",c:false}],
+        exp:"Yunus (as) sprach: 'Es gibt keinen Gott außer Dir, gepriesen seist Du, ich war ein Ungerechter.' 🤲"},
+      { q:"Was lernen wir von Yunus (as)?", ar:"", tr:"", audio:"",
+        opts:[{i:"💖",t:"Allah hört uns immer und überall",c:true},{i:"🏊",t:"Schwimmen lernen",c:false},{i:"🐟",t:"Fische fangen",c:false},{i:"🚢",t:"Schiffe bauen",c:false}],
+        exp:"Egal wo wir sind – Allah hört unser Bittgebet, wenn wir Ihn ehrlich rufen. 💖"}
+    ]},
+  { id:33, title:"Dawud & Sulaiman (as)", icon:"👑", desc:"Ein Prophet-König und sein weiser Sohn.", topics:["Dawud","Sulaiman","Weisheit"], xp:20,
+    tutorLines:["Allah gab Dawud (as) eine schöne Stimme und Sulaiman (as) Weisheit. 👑","Sulaiman (as) verstand sogar Tiere!"],
+    questions:[
+      { q:"Welches Buch erhielt Dawud (as)?", ar:"الزَّبُور", tr:"az Zabuur", audio:"الزبور",
+        opts:[{i:"🎵",t:"Die Zabur",c:true},{i:"📜",t:"Die Tawrat",c:false},{i:"📖",t:"Den Quran",c:false},{i:"✨",t:"Das Indschil",c:false}],
+        exp:"Dawud (as) erhielt die Zabur. Er hatte eine wunderschöne Stimme beim Lobpreis Allahs. 🎵"},
+      { q:"Was Besonderes konnte Sulaiman (as)?", ar:"سُلَيْمَان", tr:"Sulaimaan", audio:"سليمان",
+        opts:[{i:"🐜",t:"Mit Tieren sprechen",c:true},{i:"✈️",t:"Flugzeuge bauen",c:false},{i:"🧊",t:"Eis machen",c:false},{i:"📱",t:"Handys reparieren",c:false}],
+        exp:"Allah gab Sulaiman (as) die Fähigkeit, mit Tieren wie Ameisen und Vögeln zu sprechen. 🐜"},
+      { q:"Wofür war Sulaiman (as) bekannt?", ar:"حِكْمَة", tr:"Hikmah", audio:"حكمة",
+        opts:[{i:"🧠",t:"Für seine Weisheit und gerechte Urteile",c:true},{i:"🏃",t:"Für schnelles Rennen",c:false},{i:"🍳",t:"Für gutes Kochen",c:false},{i:"🎨",t:"Für schöne Bilder",c:false}],
+        exp:"Sulaiman (as) war ein weiser König-Prophet, der gerecht urteilte. Hikmah heißt Weisheit. 🧠"}
+    ]},
+  { id:34, title:"Prophet Ayyub (as)", icon:"🤲", desc:"Das Vorbild für Geduld in schwerer Krankheit.", topics:["Ayyub","Sabr","Vertrauen"], xp:20,
+    tutorLines:["Ayyub (as) verlor vieles, klagte aber nie über Allah. 🤲","Seine Geduld wurde reich belohnt!"],
+    questions:[
+      { q:"Wofür ist Ayyub (as) ein Vorbild?", ar:"الصَّبْر", tr:"as Sabr", audio:"الصبر",
+        opts:[{i:"⏳",t:"Für Geduld (Sabr)",c:true},{i:"💰",t:"Für Reichtum",c:false},{i:"🏃",t:"Für Schnelligkeit",c:false},{i:"🎤",t:"Für Singen",c:false}],
+        exp:"Ayyub (as) blieb auch in schwerer Krankheit geduldig und dankbar – ein Vorbild für Sabr. ⏳"},
+      { q:"Was tat Ayyub (as), als er litt?", ar:"", tr:"", audio:"",
+        opts:[{i:"🤲",t:"Er vertraute Allah und betete weiter",c:true},{i:"😡",t:"Er beschwerte sich über Allah",c:false},{i:"🙈",t:"Er gab den Glauben auf",c:false},{i:"😴",t:"Er gab auf",c:false}],
+        exp:"Trotz allem dankte Ayyub (as) Allah und betete geduldig weiter. 🤲"},
+      { q:"Womit belohnte Allah seine Geduld?", ar:"", tr:"", audio:"",
+        opts:[{i:"💖",t:"Mit Heilung und neuem Glück",c:true},{i:"❌",t:"Mit gar nichts",c:false},{i:"😢",t:"Mit mehr Leid",c:false},{i:"🌧️",t:"Mit Regen",c:false}],
+        exp:"Allah heilte Ayyub (as) und gab ihm wieder Gesundheit, Familie und Segen. 💖"}
+    ]},
+  { id:35, title:"Maryam (as)", icon:"🌸", desc:"Die fromme Mutter von Isa (as).", topics:["Maryam","Reinheit","Glaube"], xp:20,
+    tutorLines:["Maryam (as) war so fromm, dass eine ganze Sure ihren Namen trägt. 🌸","Sie vertraute Allah vollkommen."],
+    questions:[
+      { q:"Wer war Maryam (as)?", ar:"مَرْيَم", tr:"Maryam", audio:"مريم",
+        opts:[{i:"🌸",t:"Die fromme Mutter von Isa (as)",c:true},{i:"👑",t:"Eine Königin von Ägypten",c:false},{i:"⚔️",t:"Eine Kämpferin",c:false},{i:"🎨",t:"Eine Malerin",c:false}],
+        exp:"Maryam (as) war eine sehr fromme Frau und die Mutter des Propheten Isa (as). 🌸"},
+      { q:"Wofür ist Maryam (as) im Quran ein Vorbild?", ar:"", tr:"", audio:"",
+        opts:[{i:"💛",t:"Für Glauben, Reinheit und Gehorsam zu Allah",c:true},{i:"💰",t:"Für Reichtum",c:false},{i:"🏰",t:"Für ein großes Schloss",c:false},{i:"🍰",t:"Für gutes Backen",c:false}],
+        exp:"Maryam (as) ist ein Vorbild für Glauben, Reinheit und Vertrauen auf Allah. 💛"},
+      { q:"Ist eine Sure im Quran nach ihr benannt?", ar:"", tr:"", audio:"",
+        opts:[{i:"📖",t:"Ja, die Sure Maryam",c:true},{i:"❌",t:"Nein, keine",c:false},{i:"🔢",t:"Nur eine Zahl",c:false},{i:"🎵",t:"Nur ein Lied",c:false}],
+        exp:"Im Quran gibt es die Sure 'Maryam' – eine große Ehre für sie. 📖"}
+    ]},
+
+  // ══ ABSCHNITT 9: LEBEN DES PROPHETEN ﷺ ══
+  { id:36, title:"Die Kindheit des Propheten ﷺ", icon:"👶", desc:"Wie Muhammad ﷺ als Kind aufwuchs.", topics:["Mekka","Al-Amin","Waise"], xp:20,
+    tutorLines:["Schon als Kind war Muhammad ﷺ ehrlich und freundlich. 👶","Die Menschen nannten ihn 'der Ehrliche'."],
+    questions:[
+      { q:"In welcher Stadt wurde der Prophet ﷺ geboren?", ar:"مَكَّة", tr:"Makkah", audio:"مكة",
+        opts:[{i:"🕋",t:"In Mekka",c:true},{i:"🏙️",t:"In Medina",c:false},{i:"🕌",t:"In Jerusalem",c:false},{i:"🏜️",t:"In Kairo",c:false}],
+        exp:"Der Prophet Muhammad ﷺ wurde in Mekka geboren – nahe der Kaaba. 🕋"},
+      { q:"Wie nannten die Leute den jungen Muhammad ﷺ?", ar:"الْأَمِين", tr:"al Amiin", audio:"الأمين",
+        opts:[{i:"🤝",t:"Al-Amin – der Vertrauenswürdige",c:true},{i:"👑",t:"Der König",c:false},{i:"⚔️",t:"Der Krieger",c:false},{i:"🎤",t:"Der Sänger",c:false}],
+        exp:"Schon vor der Prophetenschaft nannte man ihn 'Al-Amin' – der Ehrliche und Vertrauenswürdige. 🤝"},
+      { q:"Wie war Muhammad ﷺ als Kind?", ar:"", tr:"", audio:"",
+        opts:[{i:"😊",t:"Ehrlich, freundlich und hilfsbereit",c:true},{i:"😠",t:"Streitsüchtig",c:false},{i:"🤥",t:"Unehrlich",c:false},{i:"😴",t:"Faul",c:false}],
+        exp:"Muhammad ﷺ war schon als Kind ehrlich, freundlich und half anderen gerne. 😊"}
+    ]},
+  { id:37, title:"Die erste Offenbarung", icon:"📜", desc:"Im Berg-Höhle Hira begann der Quran.", topics:["Hira","Iqra","Dschibril"], xp:20,
+    tutorLines:["In der Höhle Hira kam Dschibril mit dem ersten Wort: 'Lies!' 📜","So begann die Botschaft des Quran."],
+    questions:[
+      { q:"Wo erhielt der Prophet ﷺ die erste Offenbarung?", ar:"غَار حِرَاء", tr:"Ghaar Hiraa", audio:"غار حراء",
+        opts:[{i:"⛰️",t:"In der Höhle Hira",c:true},{i:"🏖️",t:"Am Strand",c:false},{i:"🏰",t:"In einem Schloss",c:false},{i:"🏫",t:"In einer Schule",c:false}],
+        exp:"In der Höhle Hira nahe Mekka kam der Engel Dschibril zum ersten Mal zu ihm. ⛰️"},
+      { q:"Welches war das erste offenbarte Wort?", ar:"اقْرَأْ", tr:"Iqra", audio:"اقرأ",
+        opts:[{i:"📖",t:"'Iqra' – Lies!",c:true},{i:"🏃",t:"'Lauf!'",c:false},{i:"😴",t:"'Schlaf!'",c:false},{i:"🍽️",t:"'Iss!'",c:false}],
+        exp:"Das erste Wort war 'Iqra' – Lies! Das zeigt: Wissen ist im Islam sehr wichtig. 📖"},
+      { q:"Wer brachte die Offenbarung?", ar:"جِبْرِيل", tr:"Dschibriil", audio:"جبريل",
+        opts:[{i:"😇",t:"Der Engel Dschibril",c:true},{i:"👤",t:"Ein Freund",c:false},{i:"🐦",t:"Ein Vogel",c:false},{i:"🌬️",t:"Der Wind",c:false}],
+        exp:"Der Engel Dschibril (Gabriel) brachte die Offenbarung von Allah zum Propheten ﷺ. 😇"}
+    ]},
+  { id:38, title:"Die Hidschra nach Medina", icon:"🌙", desc:"Die wichtige Auswanderung der Muslime.", topics:["Hidschra","Medina","Neubeginn"], xp:20,
+    tutorLines:["Die Hidschra war ein mutiger Neuanfang für die Muslime. 🌙","Mit ihr beginnt der islamische Kalender!"],
+    questions:[
+      { q:"Was ist die Hidschra?", ar:"الْهِجْرَة", tr:"al Hidschra", audio:"الهجرة",
+        opts:[{i:"🚶",t:"Die Auswanderung von Mekka nach Medina",c:true},{i:"🍽️",t:"Ein Festessen",c:false},{i:"🕋",t:"Der Hadsch",c:false},{i:"📖",t:"Ein Buch",c:false}],
+        exp:"Die Hidschra ist die Auswanderung des Propheten ﷺ und der Muslime von Mekka nach Medina. 🚶"},
+      { q:"Womit beginnt der islamische Kalender?", ar:"", tr:"", audio:"",
+        opts:[{i:"🌙",t:"Mit der Hidschra",c:true},{i:"🎂",t:"Mit einem Geburtstag",c:false},{i:"☀️",t:"Mit dem Sommer",c:false},{i:"🎉",t:"Mit einem Fest",c:false}],
+        exp:"Der islamische (Hidschri-)Kalender beginnt mit dem Jahr der Hidschra. 🌙"},
+      { q:"Was lernen wir aus der Hidschra?", ar:"", tr:"", audio:"",
+        opts:[{i:"💪",t:"Mut und Vertrauen auf Allah",c:true},{i:"😴",t:"Faulheit",c:false},{i:"😢",t:"Aufgeben",c:false},{i:"🤥",t:"Unehrlichkeit",c:false}],
+        exp:"Die Hidschra lehrt Mut, Geduld und Vertrauen auf Allah bei einem Neuanfang. 💪"}
+    ]},
+  { id:39, title:"Die Gefährten (Sahaba)", icon:"🤝", desc:"Die treuen Freunde des Propheten ﷺ.", topics:["Sahaba","Abu Bakr","Treue"], xp:20,
+    tutorLines:["Die Sahaba liebten den Propheten ﷺ und halfen ihm treu. 🤝","Von ihnen lernen wir Freundschaft und Mut."],
+    questions:[
+      { q:"Wer waren die Sahaba?", ar:"الصَّحَابَة", tr:"as Sahaaba", audio:"الصحابة",
+        opts:[{i:"🤝",t:"Die Gefährten des Propheten ﷺ",c:true},{i:"⚔️",t:"Seine Feinde",c:false},{i:"👻",t:"Fremde Leute",c:false},{i:"🐪",t:"Seine Tiere",c:false}],
+        exp:"Die Sahaba sind die Gefährten – die treuen Freunde, die mit dem Propheten ﷺ lebten und lernten. 🤝"},
+      { q:"Wer war der erste Kalif nach dem Propheten ﷺ?", ar:"أَبُو بَكْر", tr:"Abu Bakr", audio:"أبو بكر",
+        opts:[{i:"🌟",t:"Abu Bakr (ra)",c:true},{i:"⚔️",t:"Khalid (ra)",c:false},{i:"📖",t:"Zaid (ra)",c:false},{i:"👶",t:"Usama (ra)",c:false}],
+        exp:"Abu Bakr (ra) war der engste Freund und der erste Kalif nach dem Propheten ﷺ. 🌟"},
+      { q:"Was lernen wir von den Sahaba?", ar:"", tr:"", audio:"",
+        opts:[{i:"💛",t:"Treue, Mut und Liebe zum Glauben",c:true},{i:"💸",t:"Geld zählen",c:false},{i:"🎮",t:"Spiele spielen",c:false},{i:"😴",t:"Faul sein",c:false}],
+        exp:"Die Sahaba sind Vorbilder für Treue, Mut, Großzügigkeit und Liebe zu Allah. 💛"}
+    ]},
+
+  // ══ ABSCHNITT 10: SCHÖNER CHARAKTER & ALLTAG ══
+  { id:40, title:"Gute Manieren – Adab", icon:"🌟", desc:"Schöne Worte und Taten machen einen guten Muslim.", topics:["Adab","Salam","Höflichkeit"], xp:20,
+    tutorLines:["Guter Charakter ist im Islam sehr wertvoll. 🌟","Der Prophet ﷺ war das beste Vorbild dafür!"],
+    questions:[
+      { q:"Wie grüßen sich Muslime?", ar:"السَّلَامُ عَلَيْكُم", tr:"Assalaamu alaikum", audio:"السلام عليكم",
+        opts:[{i:"🕊️",t:"Mit 'Assalamu alaikum' (Friede sei mit dir)",c:true},{i:"👊",t:"Mit Schubsen",c:false},{i:"🙉",t:"Gar nicht",c:false},{i:"😠",t:"Mit Schreien",c:false}],
+        exp:"Muslime grüßen mit 'Assalamu alaikum' – Friede sei mit dir. Eine schöne Dua! 🕊️"},
+      { q:"Was sagt man, bevor man isst?", ar:"بِسْمِ اللَّه", tr:"Bismillah", audio:"بسم الله",
+        opts:[{i:"🍽️",t:"Bismillah",c:true},{i:"😴",t:"Gute Nacht",c:false},{i:"🏃",t:"Auf die Plätze",c:false},{i:"📺",t:"Fernsehen an",c:false}],
+        exp:"Vor dem Essen sagt man 'Bismillah' und danach 'Alhamdulillah' – Dank an Allah. 🍽️"},
+      { q:"Wie behandelt ein guter Muslim andere?", ar:"", tr:"", audio:"",
+        opts:[{i:"💖",t:"Freundlich, ehrlich und hilfsbereit",c:true},{i:"😡",t:"Gemein und laut",c:false},{i:"🤥",t:"Mit Lügen",c:false},{i:"🙅",t:"Unhöflich",c:false}],
+        exp:"Guter Adab heißt: freundlich sprechen, ehrlich sein und anderen helfen. 💖"}
+    ]},
+  { id:41, title:"Ehrlichkeit & Wahrheit", icon:"✅", desc:"Ein Muslim sagt immer die Wahrheit.", topics:["Sidq","Vertrauen","Ehrlichkeit"], xp:20,
+    tutorLines:["Ehrlichkeit führt zum Guten – der Prophet ﷺ log nie. ✅","Wahrheit macht das Herz ruhig."],
+    questions:[
+      { q:"Wie nennt man Ehrlichkeit auf Arabisch?", ar:"الصِّدْق", tr:"as Sidq", audio:"الصدق",
+        opts:[{i:"✅",t:"Sidq",c:true},{i:"😴",t:"Naum",c:false},{i:"🍽️",t:"Akl",c:false},{i:"🏃",t:"Rakd",c:false}],
+        exp:"Ehrlichkeit heißt 'Sidq'. Ein ehrlicher Mensch ist 'Sadiq'. ✅"},
+      { q:"Soll ein Muslim lügen, um Spaß zu haben?", ar:"", tr:"", audio:"",
+        opts:[{i:"🚫",t:"Nein, auch im Scherz lügt man nicht",c:true},{i:"😜",t:"Ja, wenn es lustig ist",c:false},{i:"🤷",t:"Manchmal",c:false},{i:"😎",t:"Immer",c:false}],
+        exp:"Ein Muslim lügt nicht – auch nicht im Spaß. Wahrheit ist immer besser. 🚫"},
+      { q:"Wohin führt Ehrlichkeit?", ar:"", tr:"", audio:"",
+        opts:[{i:"🌟",t:"Zum Guten und ins Paradies",c:true},{i:"🕳️",t:"Ins Unglück",c:false},{i:"😢",t:"Zur Traurigkeit",c:false},{i:"🚫",t:"Nirgendwo",c:false}],
+        exp:"Der Prophet ﷺ sagte: Ehrlichkeit führt zum Guten, und das Gute führt ins Paradies. 🌟"}
+    ]},
+  { id:42, title:"Respekt vor den Eltern", icon:"👨‍👩‍👧", desc:"Eltern zu ehren ist Allah sehr lieb.", topics:["Eltern","Respekt","Dua"], xp:20,
+    tutorLines:["Nach Allah lieben und ehren wir unsere Eltern. 👨‍👩‍👧","Ein 'Danke' und ein Lächeln machen sie froh!"],
+    questions:[
+      { q:"Wie sollen Kinder zu ihren Eltern sein?", ar:"بِرّ الْوَالِدَيْن", tr:"Birrul waalidain", audio:"بر الوالدين",
+        opts:[{i:"💖",t:"Freundlich, gehorsam und dankbar",c:true},{i:"😠",t:"Frech und laut",c:false},{i:"🙉",t:"Ignorierend",c:false},{i:"🏃",t:"Weglaufend",c:false}],
+        exp:"'Birrul waalidain' heißt Güte zu den Eltern – ihnen zu helfen und sie zu ehren. 💖"},
+      { q:"Was soll man zu den Eltern NICHT sagen?", ar:"", tr:"", audio:"",
+        opts:[{i:"🚫",t:"Kein böses oder genervtes Wort",c:true},{i:"🙏",t:"'Danke'",c:false},{i:"💖",t:"'Ich liebe euch'",c:false},{i:"🤝",t:"'Kann ich helfen?'",c:false}],
+        exp:"Der Quran sagt: Sag nicht einmal 'uff' zu den Eltern – sprich freundlich mit ihnen. 🚫"},
+      { q:"Wie kann man Eltern Gutes tun?", ar:"", tr:"", audio:"",
+        opts:[{i:"🤲",t:"Für sie beten und ihnen helfen",c:true},{i:"😴",t:"Sie ignorieren",c:false},{i:"📺",t:"Nur fernsehen",c:false},{i:"🙅",t:"Nicht zuhören",c:false}],
+        exp:"Wir machen Dua für die Eltern, helfen ihnen und sind dankbar – das liebt Allah. 🤲"}
+    ]},
+  { id:43, title:"Liebe zu Tieren & Natur", icon:"🐦", desc:"Allahs Geschöpfe verdienen Freundlichkeit.", topics:["Tiere","Umwelt","Barmherzigkeit"], xp:20,
+    tutorLines:["Der Prophet ﷺ war sehr freundlich zu Tieren. 🐦","Auch Pflanzen und Wasser sollen wir nicht verschwenden!"],
+    questions:[
+      { q:"Wie sollen Muslime mit Tieren umgehen?", ar:"رَحْمَة", tr:"Rahmah", audio:"رحمة",
+        opts:[{i:"💖",t:"Freundlich und barmherzig",c:true},{i:"😠",t:"Grob",c:false},{i:"🙈",t:"Egal wie",c:false},{i:"🪨",t:"Mit Steinen werfen",c:false}],
+        exp:"Mit Rahmah (Barmherzigkeit) zu Tieren zu sein ist eine schöne Tat, die Allah belohnt. 💖"},
+      { q:"Was lehrt uns die Geschichte vom durstigen Hund?", ar:"", tr:"", audio:"",
+        opts:[{i:"💧",t:"Einem Tier zu helfen wird belohnt",c:true},{i:"🏃",t:"Schnell wegrennen",c:false},{i:"😴",t:"Nichts tun",c:false},{i:"🍽️",t:"Selbst trinken",c:false}],
+        exp:"Ein Mann gab einem durstigen Hund Wasser – Allah vergab ihm dafür. Güte zählt! 💧"},
+      { q:"Sollen wir Wasser verschwenden?", ar:"", tr:"", audio:"",
+        opts:[{i:"🚫",t:"Nein, auch nicht beim Wudu",c:true},{i:"💦",t:"Ja, so viel wie möglich",c:false},{i:"🤷",t:"Egal",c:false},{i:"🌊",t:"Immer",c:false}],
+        exp:"Der Prophet ﷺ lehrte, sogar beim Wudu kein Wasser zu verschwenden. Wir schützen Allahs Gaben. 🚫"}
+    ]},
+  { id:44, title:"Sauberkeit im Islam", icon:"🧼", desc:"Reinheit ist ein Teil des Glaubens.", topics:["Tahara","Hygiene","Wudu"], xp:20,
+    tutorLines:["'Reinheit ist die Hälfte des Glaubens' – ein Hadith. 🧼","Saubere Kleidung, Körper und Herz!"],
+    questions:[
+      { q:"Wie wichtig ist Sauberkeit im Islam?", ar:"الطَّهَارَة", tr:"at Tahaara", audio:"الطهارة",
+        opts:[{i:"🌟",t:"Sehr wichtig – ein Teil des Glaubens",c:true},{i:"🤷",t:"Unwichtig",c:false},{i:"🙈",t:"Nur manchmal",c:false},{i:"🚫",t:"Verboten",c:false}],
+        exp:"Tahaara (Reinheit) ist sehr wichtig: 'Reinheit ist die Hälfte des Glaubens.' 🌟"},
+      { q:"Was reinigen wir, bevor wir beten?", ar:"", tr:"", audio:"",
+        opts:[{i:"💧",t:"Körper mit Wudu",c:true},{i:"📺",t:"Den Fernseher",c:false},{i:"🚗",t:"Das Auto",c:false},{i:"📚",t:"Die Bücher",c:false}],
+        exp:"Vor dem Gebet machen wir Wudu, damit Körper und Kleidung rein sind. 💧"},
+      { q:"Gehört Zähneputzen dazu?", ar:"سِوَاك", tr:"Siwaak", audio:"سواك",
+        opts:[{i:"🪥",t:"Ja, der Prophet ﷺ liebte den Siwak",c:true},{i:"🚫",t:"Nein, nie",c:false},{i:"🍬",t:"Nur mit Süßem",c:false},{i:"🌙",t:"Nur nachts verboten",c:false}],
+        exp:"Der Prophet ﷺ benutzte gern den Siwak (Zahnholz). Saubere Zähne sind Sunnah. 🪥"}
+    ]},
+  { id:45, title:"Halal & Haram", icon:"🍎", desc:"Was erlaubt und was verboten zu essen ist.", topics:["Halal","Haram","Bismillah"], xp:20,
+    tutorLines:["Halal heißt erlaubt, Haram heißt verboten. 🍎","Wir essen gutes, erlaubtes Essen mit Bismillah."],
+    questions:[
+      { q:"Was bedeutet 'Halal'?", ar:"حَلَال", tr:"Halaal", audio:"حلال",
+        opts:[{i:"✅",t:"Erlaubt",c:true},{i:"🚫",t:"Verboten",c:false},{i:"❓",t:"Unbekannt",c:false},{i:"😴",t:"Müde",c:false}],
+        exp:"Halal bedeutet 'erlaubt'. Allah erlaubt uns gute, reine Dinge. ✅"},
+      { q:"Was bedeutet 'Haram'?", ar:"حَرَام", tr:"Haraam", audio:"حرام",
+        opts:[{i:"🚫",t:"Verboten",c:true},{i:"✅",t:"Erlaubt",c:false},{i:"🍭",t:"Süß",c:false},{i:"🎉",t:"Ein Fest",c:false}],
+        exp:"Haram bedeutet 'verboten' – z.B. Schweinefleisch zu essen. Wir meiden Haram. 🚫"},
+      { q:"Was sagt man, bevor man halal isst?", ar:"بِسْمِ اللَّه", tr:"Bismillah", audio:"بسم الله",
+        opts:[{i:"🤲",t:"Bismillah",c:true},{i:"😴",t:"Gute Nacht",c:false},{i:"🏃",t:"Los geht's Sport",c:false},{i:"📺",t:"TV an",c:false}],
+        exp:"Vor dem Essen sagt man 'Bismillah' und ist dankbar für Allahs Gaben. 🤲"}
+    ]},
+  { id:46, title:"Dankbarkeit – Shukr", icon:"🙏", desc:"Allah für alles Gute danken.", topics:["Shukr","Alhamdulillah","Zufriedenheit"], xp:20,
+    tutorLines:["Ein dankbares Herz ist ein glückliches Herz. 🙏","Sag oft 'Alhamdulillah'!"],
+    questions:[
+      { q:"Was sagt man, um Allah zu danken?", ar:"الْحَمْدُ لِلَّه", tr:"Alhamdulillaah", audio:"الحمد لله",
+        opts:[{i:"🙏",t:"Alhamdulillah",c:true},{i:"😠",t:"Nichts",c:false},{i:"😴",t:"Gute Nacht",c:false},{i:"🏃",t:"Schnell weg",c:false}],
+        exp:"'Alhamdulillah' heißt 'Alles Lob gebührt Allah' – wir sagen es aus Dankbarkeit. 🙏"},
+      { q:"Wofür können wir Allah danken?", ar:"شُكْر", tr:"Schukr", audio:"شكر",
+        opts:[{i:"💖",t:"Familie, Gesundheit, Essen – für alles",c:true},{i:"🚫",t:"Für nichts",c:false},{i:"💰",t:"Nur für Geld",c:false},{i:"🎮",t:"Nur für Spiele",c:false}],
+        exp:"Schukr heißt Dankbarkeit – für Familie, Gesundheit, Essen und alle Gaben Allahs. 💖"},
+      { q:"Was passiert, wenn wir dankbar sind?", ar:"", tr:"", audio:"",
+        opts:[{i:"🌟",t:"Allah gibt uns noch mehr Segen",c:true},{i:"😢",t:"Wir verlieren alles",c:false},{i:"🤷",t:"Nichts",c:false},{i:"🚫",t:"Es ist verboten",c:false}],
+        exp:"Allah sagt: Wenn ihr dankbar seid, gebe Ich euch mehr. Dankbarkeit bringt Segen. 🌟"}
+    ]},
+  { id:47, title:"Geduld – Sabr", icon:"⏳", desc:"Ruhig bleiben und auf Allah vertrauen.", topics:["Sabr","Ruhe","Belohnung"], xp:20,
+    tutorLines:["Geduld ist stark – Allah liebt die Geduldigen. ⏳","Bei Schwerem bleiben wir ruhig und beten."],
+    questions:[
+      { q:"Was bedeutet Sabr?", ar:"الصَّبْر", tr:"as Sabr", audio:"الصبر",
+        opts:[{i:"⏳",t:"Geduld",c:true},{i:"🏃",t:"Schnelligkeit",c:false},{i:"😡",t:"Wut",c:false},{i:"😴",t:"Schlaf",c:false}],
+        exp:"Sabr heißt Geduld – ruhig bleiben bei Schwierigkeiten und weiter Gutes tun. ⏳"},
+      { q:"Was tun wir, wenn wir traurig oder geprüft sind?", ar:"", tr:"", audio:"",
+        opts:[{i:"🤲",t:"Geduldig sein und zu Allah beten",c:true},{i:"😡",t:"Wütend werden",c:false},{i:"🙈",t:"Aufgeben",c:false},{i:"🗯️",t:"Andere beschimpfen",c:false}],
+        exp:"Bei Prüfungen bleiben wir geduldig, machen Dua und vertrauen Allah. 🤲"},
+      { q:"Wen liebt Allah?", ar:"الصَّابِرِين", tr:"as Saabiriin", audio:"الصابرين",
+        opts:[{i:"💖",t:"Die Geduldigen (Sabirin)",c:true},{i:"😠",t:"Die Wütenden",c:false},{i:"😴",t:"Die Faulen",c:false},{i:"🤥",t:"Die Lügner",c:false}],
+        exp:"Im Quran steht: 'Wahrlich, Allah liebt die Geduldigen.' Sabr wird belohnt. 💖"}
+    ]},
+  { id:48, title:"Moschee & Freitagsgebet", icon:"🕌", desc:"Das Haus Allahs und der besondere Freitag.", topics:["Moschee","Dschumua","Gemeinschaft"], xp:20,
+    tutorLines:["Die Moschee ist ein Haus für Gebet und Lernen. 🕌","Der Freitag ist ein besonderer Tag für Muslime!"],
+    questions:[
+      { q:"Was ist eine Moschee?", ar:"مَسْجِد", tr:"Masdschid", audio:"مسجد",
+        opts:[{i:"🕌",t:"Ein Haus, in dem Muslime beten",c:true},{i:"🏪",t:"Ein Laden",c:false},{i:"🏟️",t:"Ein Stadion",c:false},{i:"🎢",t:"Ein Freizeitpark",c:false}],
+        exp:"Eine Moschee (Masdschid) ist ein Ort des Gebets, des Lernens und der Gemeinschaft. 🕌"},
+      { q:"Welcher Tag ist für Muslime besonders?", ar:"الْجُمُعَة", tr:"al Dschumua", audio:"الجمعة",
+        opts:[{i:"🕌",t:"Freitag (Dschumua)",c:true},{i:"📅",t:"Montag",c:false},{i:"🎉",t:"Samstag",c:false},{i:"😴",t:"Sonntag",c:false}],
+        exp:"Der Freitag (Dschumua) ist besonders – Männer beten das Freitagsgebet in der Moschee. 🕌"},
+      { q:"Wie verhält man sich in der Moschee?", ar:"", tr:"", audio:"",
+        opts:[{i:"🤫",t:"Ruhig, sauber und respektvoll",c:true},{i:"🏃",t:"Laut rennen",c:false},{i:"🍔",t:"Mit schmutzigen Schuhen",c:false},{i:"📢",t:"Laut schreien",c:false}],
+        exp:"In der Moschee sind wir ruhig, sauber und respektvoll – es ist ein besonderer Ort. 🤫"}
+    ]},
+  { id:49, title:"Ein guter Muslim sein", icon:"🏆", desc:"Alles zusammen: Glaube, Gebet und guter Charakter.", topics:["Zusammenfassung","Iman","Achlaq"], xp:30,
+    tutorLines:["Du hast so viel gelernt – Masha'Allah! 🏆","Ein guter Muslim glaubt, betet und ist gut zu allen."],
+    questions:[
+      { q:"Was macht einen guten Muslim aus?", ar:"", tr:"", audio:"",
+        opts:[{i:"💖",t:"Glaube an Allah, Gebet und guter Charakter",c:true},{i:"💰",t:"Nur viel Geld",c:false},{i:"🏆",t:"Nur Pokale",c:false},{i:"📱",t:"Nur Handys",c:false}],
+        exp:"Ein guter Muslim glaubt an Allah, betet, ist ehrlich, hilfsbereit und freundlich. 💖"},
+      { q:"Wer ist unser bestes Vorbild?", ar:"مُحَمَّد ﷺ", tr:"Muhammad ﷺ", audio:"محمد",
+        opts:[{i:"🌙",t:"Der Prophet Muhammad ﷺ",c:true},{i:"🦸",t:"Ein Superheld",c:false},{i:"🎮",t:"Eine Spielfigur",c:false},{i:"⭐",t:"Ein Filmstar",c:false}],
+        exp:"Der Prophet Muhammad ﷺ ist unser bestes Vorbild – im Glauben und im Charakter. 🌙"},
+      { q:"Was nehmen wir aus all diesen Lektionen mit?", ar:"", tr:"", audio:"",
+        opts:[{i:"🌟",t:"Allah lieben und Gutes tun",c:true},{i:"😴",t:"Alles vergessen",c:false},{i:"🤷",t:"Nichts",c:false},{i:"🚫",t:"Aufhören zu lernen",c:false}],
+        exp:"Wir nehmen mit: Allah lieben, beten, lernen und ein gutes, freundliches Herz haben. 🌟"}
+    ]}
 
 ];
 
@@ -1204,8 +1806,9 @@ const badges = [
   {id:"prophet", icon:"📖", name:"Historiker",      desc:"3 Propheten-Kapitel",     cond: s => [5,6,7,8,9].filter(x=>s.doneIds.includes(x)).length>=3},
   {id:"ramadan", icon:"🌙", name:"Ramadan-Experte", desc:"Ramadan-Kapitel geschafft",cond: s => s.doneIds.includes(10)},
   {id:"salat",   icon:"🙏", name:"Gebet-Champion",  desc:"Gebet-Kapitel abgeschlossen",cond: s => s.doneIds.includes(11)},
-  {id:"iman",    icon:"✨", name:"Iman-Meister",    desc:"Alle 4 Abschnitte done",  cond: s => s.done >= 14},
-  {id:"finish",  icon:"🏆", name:"Nuur-Champion",   desc:"Alle 14 Kapitel!",        cond: s => s.done >= 14},
+  {id:"iman",    icon:"✨", name:"Iman-Meister",    desc:"25 Kapitel geschafft",    cond: s => s.done >= 25},
+  {id:"alim",    icon:"🎓", name:"Kleiner Gelehrter",desc:"40 Kapitel geschafft",    cond: s => s.done >= 40},
+  {id:"finish",  icon:"🏆", name:"Nuur-Champion",   desc:"Alle 50 Kapitel!",        cond: s => s.done >= 50},
 ];
 
 // ══ AUDIO ══
@@ -1270,6 +1873,8 @@ function buildPath() {
   sections.forEach(sec => sec.chapterIds.forEach(cid => chapterSection[cid] = sec));
 
   let sectionShown = new Set();
+  let currentIdx = chapters.findIndex((c, ci) => !done.includes(ci));
+  if (currentIdx === -1) currentIdx = chapters.length - 1;
 
   chapters.forEach((ch, i) => {
     const sec = chapterSection[ch.id];
@@ -1289,7 +1894,7 @@ function buildPath() {
     const isDone   = done.includes(i);
     const isActive = !isDone; // alle freigeschaltet
     const isLocked = false;
-    const pos      = positions[i];
+    const pos      = positions[i % positions.length];
 
     const row = document.createElement('div');
     row.className = 'duo-step';
@@ -1302,8 +1907,9 @@ function buildPath() {
     nodeWrap.style.flexDirection = 'column';
     nodeWrap.style.alignItems = 'center';
 
+    const isCurrent = i === currentIdx;
     const node = document.createElement('div');
-    node.className = 'duo-node ' + (isDone ? 'done' : isActive ? 'active' : 'locked');
+    node.className = 'duo-node ' + (isDone ? 'done' : isActive ? 'active' : 'locked') + (isCurrent ? ' current' : '');
     node.innerHTML = `<span class="chapter-badge">${i+1}</span>${isDone ? '✅' : isLocked ? '🔒' : ch.icon}`;
     if (!isLocked) node.onclick = () => openLesson(i);
 
@@ -1314,10 +1920,11 @@ function buildPath() {
     nodeWrap.appendChild(node);
     nodeWrap.appendChild(lbl);
 
-    if (isActive) {
+    if (isCurrent && !isDone) {
       const pill = document.createElement('button');
       pill.className = 'duo-start-pill';
       pill.textContent = 'START ▶';
+      pill.setAttribute('aria-label', 'Kapitel ' + (i + 1) + ' starten: ' + ch.title);
       pill.onclick = () => openLesson(i);
       nodeWrap.appendChild(pill);
     }
@@ -1558,6 +2165,7 @@ function renderQ() {
   const q = cLesson.questions[cQ];
   const total = cLesson.questions.length;
   document.getElementById('pbar').style.width = (cQ / total * 100) + '%';
+  const qc = document.getElementById('q-counter'); if (qc) qc.textContent = 'Frage ' + (cQ + 1) + ' / ' + total;
   document.getElementById('hearts').innerHTML = [0,1,2].map(i=>`<span class="hrt${i>=hearts?' gone':''}">❤️</span>`).join('');
 
   const tutorLine = cLesson.tutorLines[cQ % cLesson.tutorLines.length];
@@ -1770,8 +2378,8 @@ function showResult() {
   showScreen('result');
 }
 
-function finishAndHome() { showScreen('home'); }
-function goHome() { showScreen('home'); }
+function finishAndHome() { switchTab('home'); buildPath(); }
+function goHome() { switchTab('home'); }
 
 function updateStats() {
   document.querySelectorAll('#h-streak,#p-streak,#st-streak').forEach(el => el && (el.textContent = streak));
@@ -1789,6 +2397,7 @@ function updateStats() {
   const m = msgs[Math.min(done.length, msgs.length - 1)];
   const bm = document.getElementById('banner-msg'); if (bm) bm.textContent = m[0];
   const bs = document.getElementById('banner-sub'); if (bs) bs.textContent = m[1];
+  saveState();
 }
 
 function renderBadges() {
@@ -1810,25 +2419,36 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function switchTab(tab, btn) {
+const NAV_ORDER = ['home', 'qibla', 'gebet', 'quran', 'profile'];
+function switchTab(tab) {
   showScreen(tab);
-  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
+  const sc = document.getElementById(tab);
+  const idx = NAV_ORDER.indexOf(tab);
+  if (sc && idx > -1) {
+    sc.querySelectorAll('.bnav-btn').forEach((b, i) => b.classList.toggle('on', i === idx));
+  }
   if (tab === 'gebet') initGebet();
 }
 
 function startApp() {
+  touchStreak();
   fillMascots();
   renderSurahList();
-  showScreen('home');
+  switchTab('home');
   buildPath();
   renderBadges();
   updateStats();
 }
 
+loadState();
 updateStats();
 renderBadges();
 fillMascots();
+// Splash bei wiederkehrenden Nutzern überspringen
+try {
+  const _s = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+  if (_s.splashSeen) startApp();
+} catch (e) {}
 
 // ══ CANDY CRUSH PARTICLE FX ══════════════════════════════════════════
 const CANDY_COLORS = ['#fbbf24','#f97316','#ec4899','#7c3aed','#18a058','#3b82f6','#a78bfa','#4ade80','#fb7185'];
@@ -1973,7 +2593,37 @@ function calcQibla(lat, lon) {
   return ((Math.atan2(y, x) * 180 / Math.PI) + 360) % 360;
 }
 
+let qiblaBearing = null, qiblaListening = false, qiblaHasHeading = false;
+
+function onOrient(e) {
+  let heading = (typeof e.webkitCompassHeading === 'number') ? e.webkitCompassHeading
+              : (e.absolute === true && typeof e.alpha === 'number') ? (360 - e.alpha) : null;
+  if (heading === null || qiblaBearing === null) return;
+  qiblaHasHeading = true;
+  const wrap = document.getElementById('compass-needle-wrap');
+  if (wrap) wrap.style.transform = `rotate(${(qiblaBearing - heading + 360) % 360}deg)`;
+  const status = document.getElementById('qibla-status');
+  const diff = Math.abs(((qiblaBearing - heading + 540) % 360) - 180);
+  if (status && status.dataset.live === '1') {
+    if (diff < 8) { status.textContent = '🕋 Perfekt! Du schaust Richtung Mekka 🎉'; status.style.color = 'var(--green2)'; }
+    else { status.textContent = '🧭 Drehe dich, bis das Kaaba-Symbol nach oben zeigt'; status.style.color = 'var(--muted)'; }
+  }
+}
+
+function startCompass() {
+  if (qiblaListening) return;
+  const add = () => {
+    window.addEventListener('deviceorientationabsolute', onOrient, true);
+    window.addEventListener('deviceorientation', onOrient, true);
+    qiblaListening = true;
+  };
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission().then(p => { if (p === 'granted') add(); }).catch(() => {});
+  } else { add(); }
+}
+
 function findQibla() {
+  startCompass(); // Kompass-Berechtigung innerhalb der Nutzer-Geste anfordern (iOS)
   const status = document.getElementById('qibla-status');
   const deg = document.getElementById('qibla-deg');
   const wrap = document.getElementById('compass-needle-wrap');
@@ -1981,22 +2631,32 @@ function findQibla() {
     status.textContent = '⚠️ Standort nicht verfügbar auf diesem Gerät';
     return;
   }
+  status.dataset.live = '0';
   status.textContent = '📍 Standort wird ermittelt …';
   navigator.geolocation.getCurrentPosition(pos => {
-    const bearing = calcQibla(pos.coords.latitude, pos.coords.longitude);
-    const rounded = Math.round(bearing);
+    qiblaBearing = calcQibla(pos.coords.latitude, pos.coords.longitude);
+    const rounded = Math.round(qiblaBearing);
     deg.textContent = rounded + ' °';
-    wrap.style.transform = `rotate(${bearing}deg)`;
-    const dir = bearing < 22.5 || bearing >= 337.5 ? 'Norden' :
-                bearing < 67.5  ? 'Nordosten' : bearing < 112.5 ? 'Osten' :
-                bearing < 157.5 ? 'Südosten'  : bearing < 202.5 ? 'Süden' :
-                bearing < 247.5 ? 'Südwesten' : bearing < 292.5 ? 'Westen' : 'Nordwesten';
-    status.textContent = `🕋 Qibla liegt ${rounded}° – Richtung ${dir}`;
-    status.style.color = 'var(--green2)';
-    status.style.fontWeight = '800';
+    wrap.style.transform = `rotate(${qiblaBearing}deg)`;
+    const b = qiblaBearing;
+    const dir = b < 22.5 || b >= 337.5 ? 'Norden' :
+                b < 67.5  ? 'Nordosten' : b < 112.5 ? 'Osten' :
+                b < 157.5 ? 'Südosten'  : b < 202.5 ? 'Süden' :
+                b < 247.5 ? 'Südwesten' : b < 292.5 ? 'Westen' : 'Nordwesten';
+    setTimeout(() => {
+      if (qiblaHasHeading) {
+        status.dataset.live = '1';
+        status.textContent = '🧭 Halte das Handy flach – drehe dich Richtung Kaaba';
+      } else {
+        status.dataset.live = '0';
+        status.textContent = `🕋 Qibla liegt bei ${rounded}° – Richtung ${dir} (Kompass auf diesem Gerät nicht verfügbar)`;
+        status.style.color = 'var(--green2)';
+      }
+      status.style.fontWeight = '800';
+    }, 800);
   }, err => {
     status.textContent = err.code === 1 ? '⚠️ Standort-Zugriff verweigert – bitte in den Einstellungen erlauben' : '⚠️ Standort konnte nicht ermittelt werden';
-  }, { timeout: 10000 });
+  }, { timeout: 10000, enableHighAccuracy: true });
 }
 
 // ══ QURAN FÜR KINDER ══════════════════════════════════════════════════════════
@@ -2283,6 +2943,7 @@ function closeSurah() {
 
 let gebetGender = 'boy';
 let gebetMode = 'wudu';
+let gebetPrayer = 'fajr';
 let wuduDone = [];
 let salatStep = 0;
 
@@ -2325,6 +2986,49 @@ const SALAT_STEPS = [
   { icon:'✅', title:'Salam links – Gebet beendet!', ar:'اَلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ', tr:'Assalaamu alaykum wa rahmatullaah', desc:'Drehe den Kopf nach links. Das Fajr-Gebet ist vollständig! Masha Allah! 🎉' },
 ];
 
+// ══ ALLE 5 GEBETE ══
+const PRAYERS = {
+  fajr:   { name:'Fajr',    icon:'🌅', rakaat:2, time:'vor Sonnenaufgang' },
+  dhuhr:  { name:'Dhuhr',   icon:'☀️', rakaat:4, time:'mittags' },
+  asr:    { name:'Asr',     icon:'🌤️', rakaat:4, time:'nachmittags' },
+  maghrib:{ name:'Maghrib', icon:'🌇', rakaat:3, time:'nach Sonnenuntergang' },
+  isha:   { name:'Isha',    icon:'🌙', rakaat:4, time:'nachts' }
+};
+
+function buildSalatSteps(key) {
+  const p = PRAYERS[key] || PRAYERS.fajr;
+  const R = p.rakaat;
+  const s = [];
+  s.push({ icon:'🕌', title:'Richtung Qibla', ar:'', tr:'', desc:'Stelle dich Richtung Qibla – der Kaaba in Mekka. Nutze die Qibla-Funktion in der App!' });
+  s.push({ icon:'🤲', title:'Niyyah – Die Absicht', ar:'', tr:'', desc:'Mache im Herzen die Absicht: „Ich bete jetzt '+R+' Rakaat '+p.name+' für Allah." ('+p.name+' wird '+p.time+' gebetet.)' });
+  s.push({ icon:'🙌', title:'Takbiratul Ihram', ar:'اللَّهُ أَكْبَر', tr:'Allahu Akbar', desc:'Hebe die Hände bis zu den Ohren und sprich: Allahu Akbar. Damit beginnt das Gebet.' });
+  for (let r = 1; r <= R; r++) {
+    if (r > 1) s.push({ icon:'🧍', title:r+'. Rakaa beginnt', ar:'اللَّهُ أَكْبَر', tr:'Allahu Akbar', desc:'Stehe aufrecht für die '+r+'. Rakaa.' });
+    if (r === 1) s.push({ icon:'🙏', title:'Eröffnungsbittgebet (Thana)', ar:'سُبْحَانَكَ اللَّهُمَّ', tr:'Subhaanaka llaahumma wa bi hamdik', desc:'Lege die Hände auf die Brust (rechts über links) und sprich das Eröffnungsbittgebet.' });
+    s.push({ icon:'📖', title:'Al-Fatiha · '+r+'. Rakaa', ar:'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِين', tr:'Alhamdu lillaahi rabbil aalamiin', desc:'Rezitiere die Sure Al-Fatiha – das Herz des Gebets.' });
+    if (r <= 2) s.push({ icon:'📖', title:'Kurze Sure · '+r+'. Rakaa', ar:'قُلْ هُوَ اللَّهُ أَحَد', tr:'Qul huwallaahu ahad', desc:'Lies nach Al-Fatiha eine kurze Sure, z.B. Al-Ikhlas.' });
+    else s.push({ icon:'📖', title:'Nur Al-Fatiha · '+r+'. Rakaa', ar:'', tr:'', desc:'Ab der 3. Rakaa wird nur Al-Fatiha gelesen – keine zusätzliche Sure.' });
+    s.push({ icon:'🙇', title:'Ruku – Verbeugung', ar:'سُبْحَانَ رَبِّيَ الْعَظِيم', tr:'Subhaana rabbiyal aziim', desc:'Beuge dich mit geradem Rücken und sprich 3x: Subhaana rabbiyal aziim.' });
+    s.push({ icon:'⬆️', title:'Aufrichten (I’tidal)', ar:'سَمِعَ اللَّهُ لِمَنْ حَمِدَه', tr:'Sami allaahu liman hamidah', desc:'Richte dich auf und sprich: Sami Allaahu liman hamidah – Rabbanaa lakal hamd.' });
+    s.push({ icon:'🧎', title:'1. Sajda – Niederwerfung', ar:'سُبْحَانَ رَبِّيَ الْأَعْلَى', tr:'Subhaana rabbiyal alaa', desc:'Werfe dich nieder (Stirn, Nase, Hände, Knie, Füße) und sprich 3x: Subhaana rabbiyal alaa.' });
+    s.push({ icon:'🪑', title:'Sitzen zwischen den Sajdas', ar:'رَبِّ اغْفِرْ لِي', tr:'Rabbighfir lii', desc:'Setze dich kurz und sprich: Rabbighfir lii.' });
+    s.push({ icon:'🧎', title:'2. Sajda', ar:'سُبْحَانَ رَبِّيَ الْأَعْلَى', tr:'Subhaana rabbiyal alaa', desc:'Zweite Niederwerfung – wieder 3x: Subhaana rabbiyal alaa.' });
+    const isLast = (r === R);
+    if (!isLast && r === 2) {
+      s.push({ icon:'🪑', title:'Erstes Tashahhud (sitzen)', ar:'اَلتَّحِيَّاتُ لِلَّه', tr:'Attahiyyaatu lillaah …', desc:'Setze dich und sprich At-Tahiyyat. Danach stehe für die nächste Rakaa auf.' });
+    }
+    if (isLast) {
+      s.push({ icon:'🪑', title:'At-Tahiyyat (letztes Sitzen)', ar:'اَلتَّحِيَّاتُ لِلَّه', tr:'Attahiyyaatu lillaahi was salawaat', desc:'Setze dich und sprich At-Tahiyyat. Zeige beim Schahada-Teil mit dem Zeigefinger.' });
+      s.push({ icon:'🤲', title:'Darud Ibrahim', ar:'اَللَّهُمَّ صَلِّ عَلَى مُحَمَّد', tr:'Allahumma salli alaa Muhammad', desc:'Sprich den Segen auf den Propheten ﷺ (Darud Ibrahim).' });
+      s.push({ icon:'💛', title:'Bittgebet (Dua)', ar:'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَة', tr:'Rabbanaa aatinaa fid dunyaa hasanah', desc:'Mache ein kurzes Bittgebet vor dem Salam.' });
+      s.push({ icon:'🔄', title:'Salam rechts', ar:'اَلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّه', tr:'Assalaamu alaykum wa rahmatullaah', desc:'Drehe den Kopf nach rechts und sprich den Salam.' });
+      s.push({ icon:'✅', title:'Salam links – '+p.name+' beendet!', ar:'اَلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّه', tr:'Assalaamu alaykum wa rahmatullaah', desc:'Drehe den Kopf nach links. Dein '+p.name+'-Gebet ('+R+' Rakaat) ist vollständig! Masha Allah! 🎉' });
+    }
+  }
+  return s;
+}
+let currentSalatSteps = buildSalatSteps('fajr');
+
 function setGebetGender(g) {
   gebetGender = g;
   document.getElementById('gb-boy').classList.toggle('active', g === 'boy');
@@ -2336,7 +3040,20 @@ function setGebetMode(m) {
   gebetMode = m;
   document.getElementById('gm-wudu').classList.toggle('active', m === 'wudu');
   document.getElementById('gm-salat').classList.toggle('active', m === 'salat');
-  if (m === 'salat') salatStep = 0;
+  const pr = document.getElementById('prayer-row');
+  if (pr) pr.style.display = (m === 'salat') ? 'flex' : 'none';
+  if (m === 'salat') { salatStep = 0; currentSalatSteps = buildSalatSteps(gebetPrayer); }
+  renderGebetContent();
+}
+
+function setGebetPrayer(key) {
+  gebetPrayer = key;
+  ['fajr','dhuhr','asr','maghrib','isha'].forEach(function(k){
+    var b = document.getElementById('pb-'+k);
+    if (b) b.classList.toggle('active', k === key);
+  });
+  salatStep = 0;
+  currentSalatSteps = buildSalatSteps(key);
   renderGebetContent();
 }
 
@@ -2348,28 +3065,32 @@ function renderGebetContent() {
 }
 
 function renderWudu(el) {
-  const steps = WUDU_STEPS;
-  el.innerHTML = `
-    <div class="wudu-steps">
-      ${steps.map((s, i) => {
-        const isDone = wuduDone.includes(i);
-        const genderNote = (gebetGender === 'girl' && s.genderNote_girl) ? `<div style="font-size:12px;color:var(--purple);font-weight:800;margin-top:5px;padding:5px 8px;background:rgba(124,58,237,0.08);border-radius:10px;">👧 ${s.genderNote_girl}</div>` : '';
-        const duaHTML = s.dua ? `<div style="margin-top:6px;font-size:15px;direction:rtl;color:var(--purple);font-weight:700;">${s.dua}</div><div style="font-size:11px;color:var(--muted);font-style:italic;">${s.dua_tr}</div>` : '';
-        return `<div class="wudu-step ${isDone?'done':''}" onclick="toggleWudu(${i})">
-          <div class="wudu-step-num">${isDone ? '✓' : i+1}</div>
-          <div class="wudu-step-body">
-            <div class="wudu-step-title">${s.title}</div>
-            <div class="wudu-step-desc">${s.desc}</div>
-            ${genderNote}
-            ${duaHTML}
-            ${s.dua ? `<button class="ayah-speak-btn" style="margin-top:6px;" onclick="event.stopPropagation();speak('${s.dua.replace(/'/g,"\'")}',this)">🔊 Dua hören</button>` : ''}
-          </div>
-          <div class="wudu-step-icon">${s.icon}</div>
-        </div>`;
-      }).join('')}
-      <button class="wudu-reset-btn" onclick="resetWudu()">🔄 Wudu neu starten</button>
-    </div>
-  `;
+  let h = '<div class="wudu-steps">';
+  WUDU_STEPS.forEach(function(s, i) {
+    var isDone = wuduDone.includes(i);
+    var cls = isDone ? 'wudu-step done' : 'wudu-step';
+    var num = isDone ? '✓' : (i+1);
+    var body = '<div class="wudu-step-num">'+num+'</div><div class="wudu-step-body">';
+    body += '<div class="wudu-step-title">'+s.title+'</div>';
+    body += '<div class="wudu-step-desc">'+s.desc+'</div>';
+    if (gebetGender === 'girl' && s.genderNote_girl) {
+      body += '<div style="font-size:12px;color:var(--purple);font-weight:800;margin-top:5px;padding:5px 8px;background:rgba(124,58,237,0.08);border-radius:10px;">👧 '+s.genderNote_girl+'</div>';
+    }
+    if (s.dua) {
+      body += '<div style="margin-top:6px;font-size:16px;direction:rtl;color:var(--purple);font-weight:700;">'+s.dua+'</div>';
+      body += '<div style="font-size:11px;color:var(--muted);font-style:italic;">'+s.dua_tr+'</div>';
+      body += '<button class="ayah-speak-btn" style="margin-top:6px;" onclick="event.stopPropagation();speakItem('+i+',\'wudu\')">🔊 Dua hören</button>';
+    }
+    body += '</div><div class="wudu-step-icon">'+s.icon+'</div>';
+    h += '<div class="'+cls+'" onclick="toggleWudu('+i+')">'+body+'</div>';
+  });
+  h += '<button class="wudu-reset-btn" onclick="resetWudu()">🔄 Wudu neu starten</button></div>';
+  el.innerHTML = h;
+}
+
+function speakItem(i, type) {
+  var text = type === 'wudu' ? WUDU_STEPS[i].dua : currentSalatSteps[i].ar;
+  speak(text, null);
 }
 
 function toggleWudu(i) {
@@ -2392,46 +3113,49 @@ function resetWudu() {
 }
 
 function renderSalat(el) {
-  const steps = SALAT_STEPS;
-  const step = steps[salatStep];
-  const progress = ((salatStep) / steps.length * 100).toFixed(0);
-  el.innerHTML = `
-    <div class="salat-intro">
-      <h3>🕌 Fajr-Gebet – Schritt ${salatStep+1} von ${steps.length}</h3>
-      <p>Das Fajr-Gebet hat 2 Rakaats und wird vor dem Sonnenaufgang verrichtet.</p>
-    </div>
-    <div class="salat-progress-bar"><div class="salat-progress-fill" style="width:${progress}%"></div></div>
-    <div class="salat-steps">
-      <div class="salat-step active">
-        <div class="salat-step-header">
-          <div class="salat-step-num">${salatStep+1}</div>
-          <div class="salat-step-icon">${step.icon}</div>
-          <div class="salat-step-title">${step.title}</div>
-        </div>
-        ${step.ar ? `<div class="salat-step-ar">${step.ar}</div><div class="salat-step-tr">${step.tr}</div>` : ''}
-        <div class="salat-step-desc">${step.desc}</div>
-        ${step.ar ? `<button class="ayah-speak-btn" style="margin-top:8px;" onclick="speak('${step.ar.replace(/'/g,"\'")}',this)">🔊 Anhören</button>` : ''}
-      </div>
-    </div>
-    <div class="salat-nav-row">
-      ${salatStep > 0 ? `<button class="salat-nav-btn salat-prev-btn" onclick="salatPrev()">← Zurück</button>` : '<div style="flex:1"></div>'}
-      ${salatStep < steps.length-1
-        ? `<button class="salat-nav-btn salat-next-btn" onclick="salatNext()">Weiter →</button>`
-        : `<button class="salat-nav-btn salat-next-btn" onclick="salatFinish()" style="background:linear-gradient(to bottom,#4ade80,var(--green) 50%,var(--green-shadow));color:white;border-bottom-color:var(--green-shadow);">✅ Allahu Akbar!</button>`
-      }
-    </div>
-    <div style="padding:0 18px 16px;">
-      <div style="font-size:12px;color:var(--muted);text-align:center;">Tippe auf die Schritte zum Navigieren</div>
-    </div>
-  `;
+  var p = PRAYERS[gebetPrayer] || PRAYERS.fajr;
+  var step = currentSalatSteps[salatStep];
+  var total = currentSalatSteps.length;
+  var pct = Math.round(salatStep / total * 100);
+  var h = '';
+  h += '<div class="salat-intro"><h3>'+p.icon+' '+p.name+'-Gebet – Schritt '+(salatStep+1)+' von '+total+'</h3>';
+  h += '<p>Das '+p.name+'-Gebet hat '+p.rakaat+' Rakaat und wird '+p.time+' gebetet.</p></div>';
+  h += '<div class="salat-progress-bar"><div class="salat-progress-fill" style="width:'+pct+'%"></div></div>';
+  h += '<div class="salat-steps"><div class="salat-step active">';
+  h += '<div class="salat-step-header">';
+  h += '<div class="salat-step-num">'+(salatStep+1)+'</div>';
+  h += '<div class="salat-step-icon">'+step.icon+'</div>';
+  h += '<div class="salat-step-title">'+step.title+'</div>';
+  h += '</div>';
+  if (step.ar) {
+    h += '<div class="salat-step-ar">'+step.ar+'</div>';
+    h += '<div class="salat-step-tr">'+step.tr+'</div>';
+    h += '<button class="ayah-speak-btn" style="margin-top:8px;" onclick="speakItem('+salatStep+',\'salat\')">🔊 Anhören</button>';
+  }
+  h += '<div class="salat-step-desc">'+step.desc+'</div>';
+  h += '</div></div>';
+  h += '<div class="salat-nav-row">';
+  if (salatStep > 0) {
+    h += '<button class="salat-nav-btn salat-prev-btn" onclick="salatPrev()">← Zurück</button>';
+  } else {
+    h += '<div style="flex:1"></div>';
+  }
+  if (salatStep < total - 1) {
+    h += '<button class="salat-nav-btn salat-next-btn" onclick="salatNext()">Weiter →</button>';
+  } else {
+    h += '<button class="salat-nav-btn salat-next-btn" style="background:linear-gradient(to bottom,#4ade80,var(--green) 50%,var(--green-shadow));color:white;border-bottom-color:var(--green-shadow);" onclick="salatFinish()">✅ Allahu Akbar!</button>';
+  }
+  h += '</div>';
+  el.innerHTML = h;
 }
 
 function salatNext() {
-  if (salatStep < SALAT_STEPS.length - 1) {
+  if (salatStep < currentSalatSteps.length - 1) {
     salatStep++;
     renderSalat(document.getElementById('gebet-content'));
-    document.getElementById('gebet-content').scrollIntoView({behavior:'smooth',block:'start'});
-    if (salatStep % 3 === 0) burstStars(document.querySelector('.salat-next-btn'));
+    document.getElementById('gebet-scroll').scrollTop = 0;
+    const btn = document.querySelector('.salat-next-btn');
+    if (btn && salatStep % 3 === 0) burstStars(btn);
   }
 }
 function salatPrev() {
@@ -2450,6 +3174,82 @@ function salatFinish() {
 
 function initGebet() {
   renderGebetContent();
+}
+
+// ══ ARABISCHES ALPHABET ══════════════════════════════════════════════
+const ARABIC_LETTERS = [
+  { c:'ا', n:'Alif',  tr:'alif',  s:'langes „a" (Aa)',            say:'أَلِف', ex:'أَرْنَب', exDe:'Hase' },
+  { c:'ب', n:'Ba',    tr:'baa',   s:'„b" wie in Ball',            say:'بَاء',  ex:'بَاب',   exDe:'Tür' },
+  { c:'ت', n:'Ta',    tr:'taa',   s:'„t" wie in Tasse',           say:'تَاء',  ex:'تَمْر',  exDe:'Dattel' },
+  { c:'ث', n:'Tha',   tr:'thaa',  s:'engl. „th" wie in think',    say:'ثَاء',  ex:'ثَعْلَب',exDe:'Fuchs' },
+  { c:'ج', n:'Dschim',tr:'dschim',s:'„dsch" wie in Dschungel',    say:'جِيم',  ex:'جَمَل',  exDe:'Kamel' },
+  { c:'ح', n:'Ha',    tr:'haa',   s:'kräftiges „h" aus dem Hals', say:'حَاء',  ex:'حُوت',   exDe:'Wal' },
+  { c:'خ', n:'Cha',   tr:'chaa',  s:'„ch" wie in Bach',           say:'خَاء',  ex:'خُبْز',  exDe:'Brot' },
+  { c:'د', n:'Dal',   tr:'dal',   s:'„d" wie in Dach',            say:'دَال',  ex:'دُبّ',   exDe:'Bär' },
+  { c:'ذ', n:'Dhal',  tr:'dhal',  s:'weiches engl. „th" wie this',say:'ذَال',  ex:'ذَهَب',  exDe:'Gold' },
+  { c:'ر', n:'Ra',    tr:'raa',   s:'gerolltes „r"',              say:'رَاء',  ex:'رُمَّان',exDe:'Granatapfel' },
+  { c:'ز', n:'Zay',   tr:'zay',   s:'stimmhaftes „s" (summen)',   say:'زَاي',  ex:'زَيْت',  exDe:'Öl' },
+  { c:'س', n:'Sin',   tr:'sin',   s:'scharfes „s" wie in Tasse',  say:'سِين',  ex:'سَمَك',  exDe:'Fisch' },
+  { c:'ش', n:'Schin', tr:'schin', s:'„sch" wie in Schule',        say:'شِين',  ex:'شَمْس',  exDe:'Sonne' },
+  { c:'ص', n:'Sad',   tr:'sad',   s:'dunkles, hartes „s"',        say:'صَاد',  ex:'صَقْر',  exDe:'Falke' },
+  { c:'ض', n:'Dad',   tr:'dad',   s:'dunkles, hartes „d"',        say:'ضَاد',  ex:'ضِفْدَع',exDe:'Frosch' },
+  { c:'ط', n:'Ta (stark)',tr:'taa',s:'dunkles, hartes „t"',       say:'طَاء',  ex:'طَيْر',  exDe:'Vogel' },
+  { c:'ظ', n:'Za (stark)',tr:'zaa',s:'dunkles „dh"',              say:'ظَاء',  ex:'ظِلّ',   exDe:'Schatten' },
+  { c:'ع', n:'Ain',   tr:'ain',   s:'Kehllaut – tief aus dem Hals',say:'عَيْن', ex:'عَيْن',  exDe:'Auge' },
+  { c:'غ', n:'Ghain', tr:'ghain', s:'„r" wie franz. Gaumen-r',    say:'غَيْن', ex:'غُرَاب', exDe:'Rabe' },
+  { c:'ف', n:'Fa',    tr:'faa',   s:'„f" wie in Fisch',           say:'فَاء',  ex:'فِيل',   exDe:'Elefant' },
+  { c:'ق', n:'Qaf',   tr:'qaf',   s:'tiefes „k" hinten im Mund',  say:'قَاف',  ex:'قَمَر',  exDe:'Mond' },
+  { c:'ك', n:'Kaf',   tr:'kaf',   s:'„k" wie in Kind',            say:'كَاف',  ex:'كِتَاب', exDe:'Buch' },
+  { c:'ل', n:'Lam',   tr:'lam',   s:'„l" wie in Lampe',           say:'لاَم',  ex:'لَيْمُون',exDe:'Zitrone' },
+  { c:'م', n:'Mim',   tr:'mim',   s:'„m" wie in Mond',            say:'مِيم',  ex:'مَاء',   exDe:'Wasser' },
+  { c:'ن', n:'Nun',   tr:'nun',   s:'„n" wie in Nase',            say:'نُون',  ex:'نَحْل',  exDe:'Biene' },
+  { c:'ه', n:'Ha',    tr:'haa',   s:'weiches „h" wie in Haus',    say:'هَاء',  ex:'هُدْهُد',exDe:'Wiedehopf' },
+  { c:'و', n:'Waw',   tr:'waw',   s:'„w"/langes „u" (Uu)',        say:'وَاو',  ex:'وَرْد',  exDe:'Rose' },
+  { c:'ي', n:'Ya',    tr:'yaa',   s:'„j"/langes „i" (Ii)',        say:'يَاء',  ex:'يَد',    exDe:'Hand' }
+];
+
+const HARAKAT = [
+  { c:'بَ',  n:'Fatha',        d:'kurzes „a" → ba', say:'بَ' },
+  { c:'بِ',  n:'Kasra',        d:'kurzes „i" → bi', say:'بِ' },
+  { c:'بُ',  n:'Damma',        d:'kurzes „u" → bu', say:'بُ' },
+  { c:'بْ',  n:'Sukun',        d:'kein Vokal → b',  say:'بْ' },
+  { c:'بّ',  n:'Schadda',      d:'Verdopplung → bb',say:'بَّ' },
+  { c:'بَا', n:'Madd (lang)',  d:'langes „aa" → baa',say:'بَا' },
+  { c:'بًا', n:'Tanwin (an)',  d:'n-Endung → „ban"',say:'بًا' },
+  { c:'بٌ',  n:'Tanwin (un)',  d:'n-Endung → „bun"',say:'بٌ' }
+];
+
+function speakAr(text, el) {
+  if (el) { el.classList.add('play'); setTimeout(function(){ el.classList.remove('play'); }, 900); }
+  speak(text, null);
+}
+
+let alifBuilt = false;
+function buildAlif() {
+  const g = document.getElementById('alif-grid');
+  if (g) g.innerHTML = ARABIC_LETTERS.map(function(L, i) {
+    return '<div class="alif-cell" onclick="speakAr(\'' + L.say + '\', this)" role="button" aria-label="Buchstabe ' + L.n + '">' +
+      '<div class="ac-char">' + L.c + '</div>' +
+      '<div class="ac-name">' + L.n + '</div>' +
+      '<div class="ac-tr">' + L.tr + '</div>' +
+      '<div class="ac-sound">' + L.s + '</div>' +
+      '<div class="ac-tr">🔊 ' + L.ex + ' · ' + L.exDe + '</div>' +
+      '</div>';
+  }).join('');
+  const hg = document.getElementById('harakat-grid');
+  if (hg) hg.innerHTML = HARAKAT.map(function(H) {
+    return '<div class="harakat-cell" onclick="speakAr(\'' + H.say + '\', this)" role="button" aria-label="' + H.n + '">' +
+      '<div class="hc-char">' + H.c + '</div>' +
+      '<div class="hc-name">' + H.n + '</div>' +
+      '<div class="hc-desc">' + H.d + '</div>' +
+      '</div>';
+  }).join('');
+  alifBuilt = true;
+}
+
+function openAlif() {
+  if (!alifBuilt) buildAlif();
+  showScreen('alif');
 }
 
 </script>
